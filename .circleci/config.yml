@@ -27,3 +27,6 @@ jobs:
       - checkout
       - run: npm install
       - run: npm test
+      - react/eslint:
+          requires:
+            - npm install

@@ -1,23 +1,28 @@
-orbs:
-  react: thefrontside/react@0.2.0
-version: 2.1
-workflows:
-  push:
-    jobs:
-      - react/install
-      - react/eslint:
-          requires:
-            - react/install
-      - react/test:
-          requires:
-            - react/install
-      - react/coverage:
-          requires:
-            - react/install
+#orbs:
+#  react: thefrontside/react@0.2.0
+#version: 2.1
+#workflows:
+#  push:
+#    jobs:
+#      - react/install
+#      - react/eslint:
+#          requires:
+#            - react/install
+#      - react/test:
+#          requires:
+#            - react/install
+#      - react/coverage:
+#          requires:
+#            - react/install
 
-# CircleCi version
-#version: 2.0
-#jobs:
-#  build:
-#    docker:
-#      - image: alpine:3.7
+version: 2.0
+jobs:
+  build:
+    docker:
+      - image: circleci/node
+
+    working_directory: ~/repo
+
+    steps:
+      - run: npm install
+      - run: npm test

@@ -11,5 +11,8 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="@types/jest" level="application" />
     <orderEntry type="library" name="@types/reach__tabs" level="application" />
+    <orderEntry type="library" name="@types/yaml-front-matter" level="application" />
+    <orderEntry type="library" name="@types/docker-events" level="application" />
+    <orderEntry type="library" name="@types/react" level="application" />
   </component>
 </module>

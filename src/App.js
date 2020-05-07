@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-<<<<<<< HEAD
 import P5Wrapper from 'react-p5-wrapper';
 import sketch from './components/Sketch';
 import './style/App.css';
@@ -24,18 +23,5 @@ class App extends Component {
         </div>
     );
   }
-=======
-import './style/App.css';
 
-class App extends Component {
-
-    render() {
-        return (
-            <div>
-                Hallo
-            </div>
-        );
-    }
->>>>>>> d95b1461ca93dc01952f4a8642072bc46d78b3c9
-}
 export default App;

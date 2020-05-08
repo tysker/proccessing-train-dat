@@ -1,40 +1,48 @@
 import React, { Component } from 'react';
-import P5Wrapper from 'react-p5-wrapper';
-import sketch from './components/sketch';
+import styled from 'styled-components';
+import p5 from 'p5';
 import './style/App.css';
 
+
 class App extends Component {
-        state = {
-            color: [Math.random() * 255, Math.random() * 255, Math.random() * 255],
-            straightTrack: ['a']
+    constructor(props) {
+        super(props)
+        this.myRef = React.createRef()
+    }
+
+    Sketch = (p) => {
+        let x = 10;
+        let y = 20;
+
+        p.setup = () => {
+            p.createCanvas(1000,600);
         }
 
+        p.draw = () => {
+            p.background(210);
+            p.fill(0);
+            p.rect(x,y,10,50);
+        }
+    }
 
-
-
+    componentDidMount() {
+        this.myP5 = new p5(this.Sketch, this.myRef.current)
+    }
 
     render() {
-        const randomColor = () => {
-            this.setState({color: [Math.random() * 255, Math.random() * 255, Math.random() * 255]}
-            )
-        }
-        const straightTrack = () => {
-            this.setState(state => {
-                const straightTrack = state.straightTrack.push('straight');
-
-                return{
-                    straightTrack
-                };
-            });
-        };
         return (
-            <div>
-                <button onClick={straightTrack}>Add Straight Track</button>
-                <button onClick={randomColor}>Random Color</button>
-                <P5Wrapper sketch={sketch} props={this.state}></P5Wrapper>
-            </div>
-        );
+            <CanvasGrid ref={this.myRef}>
+
+            </CanvasGrid>
+        )
     }
 }
 
 export default App;
+
+const CanvasGrid = styled.div`
+    display: grid;
+    padding: 1rem;
+    grid-template-columns: repeat(1, 1fr);
+    grid-row-gap: 1rem;
+`;

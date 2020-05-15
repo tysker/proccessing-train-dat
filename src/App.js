@@ -86,7 +86,7 @@ class App extends Component {
 
                     case 'South':
                         sideX = 10;
-                        sideY = -20;
+                        sideY = 20;
                         break;
 
                     case 'West':
@@ -96,7 +96,7 @@ class App extends Component {
 
                     case 'North':
                         sideX = 10;
-                        sideY = 20;
+                        sideY = -20;
                         break;
                 }
 

@@ -6,7 +6,7 @@ import './style/App.css';
 const railTrack = {
     id: 1,
     trackType: "Straight",
-    direction: "South",
+    direction: 90,
     x: 200,
     y: 200
 }
@@ -21,22 +21,23 @@ class App extends Component {
 
     addStraightTrack = (event) => {
         switch(trackMap[lastRailInTrackMap].direction){
-            case 'East':
+            case 90:
                 newX = trackMap[lastRailInTrackMap].x + 20;
                 newY = trackMap[lastRailInTrackMap].y;
+
                 break;
 
-            case 'South':
+            case 180:
                 newX = trackMap[lastRailInTrackMap].x;
                 newY = trackMap[lastRailInTrackMap].y+20;
                 break;
 
-            case 'West':
+            case 270:
                 newX = trackMap[lastRailInTrackMap].x-20;
                 newY = trackMap[lastRailInTrackMap].y;
                 break;
 
-            case 'North':
+            case 360:
                 newX = trackMap[lastRailInTrackMap].x;
                 newY = trackMap[lastRailInTrackMap].y-20;
                 break;
@@ -53,12 +54,34 @@ class App extends Component {
 
     }
 
-    straitTrack = (sketch) => {
-        sketch.stroke(250);
-        sketch.fill(80);
-        sketch.rect(10, 100, 50, 50);
+    straightTrack = (sketch, i) => {
+        switch (trackMap[i].direction) {
+            case 90:
+                sideX = 20;
+                sideY = 10;
+                break;
+
+            case 180:
+                sideX = 10;
+                sideY = 20;
+                break;
+
+            case 270:
+                sideX = -20;
+                sideY = 10;
+                break;
+
+            case 360:
+                sideX = 10;
+                sideY = -20;
+                break;
+        }
+        sketch.rect(trackMap[i].x, trackMap[i].y, sideX, sideY);
     }
 
+    rotateTrack = (sketch, direction) =>{
+        sketch.rotate(3.14/direction);
+   }
     clicked = (sketch) => {
         const d = sketch.dist(sketch.mouseX, sketch.mouseY, 10, 100);
         if (d < 50) {
@@ -78,29 +101,27 @@ class App extends Component {
 
         sketch.draw = () => {
             for (let i = 0; i < trackMap.length; i++) {
-                switch (trackMap[i].direction) {
-                    case 'East':
-                        sideX = 20;
-                        sideY = 10;
+                switch (trackMap[i].trackType) {
+                    case 'Straight':
+                        if(trackMap[i].id === 1 ){
+                            this.rotateTrack(sketch,trackMap[i].direction);
+                            console.log(i)
+                            console.log(trackMap[i].direction)
+                        }else if(trackMap[i].direction !== trackMap[i-1].direction ){
+                            this.rotateTrack(sketch,trackMap[i].direction);
+                        }
+                        this.straightTrack(sketch,i);
                         break;
 
-                    case 'South':
-                        sideX = 10;
-                        sideY = 20;
+                    case 'Curve':
+
                         break;
 
-                    case 'West':
-                        sideX = -20;
-                        sideY = 10;
+                    case 'Switch':
+
                         break;
 
-                    case 'North':
-                        sideX = 10;
-                        sideY = -20;
-                        break;
                 }
-
-                sketch.rect(trackMap[i].x, trackMap[i].y, sideX, sideY);
             }
         }
     }

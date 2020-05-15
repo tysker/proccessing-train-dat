@@ -54,6 +54,41 @@ class App extends Component {
 
     }
 
+    addLowerStraightTrack = (event) => {
+        switch(trackMap[lastRailInTrackMap].direction){
+            case 90:
+                newX = trackMap[lastRailInTrackMap].x + 20;
+                newY = trackMap[lastRailInTrackMap].y+20;
+
+                break;
+
+            case 180:
+                newX = trackMap[lastRailInTrackMap].x;
+                newY = trackMap[lastRailInTrackMap].y+20;
+                break;
+
+            case 270:
+                newX = trackMap[lastRailInTrackMap].x-20;
+                newY = trackMap[lastRailInTrackMap].y;
+                break;
+
+            case 360:
+                newX = trackMap[lastRailInTrackMap].x;
+                newY = trackMap[lastRailInTrackMap].y-20;
+                break;
+        }
+        railTrack.x = newX;
+        railTrack.y = newY;
+        railTrack.id = trackMap[lastRailInTrackMap].id + 1
+        railTrack.direction = trackMap[lastRailInTrackMap].direction
+        railTrack.trackType = "Straight"
+        trackMap.push(railTrack);
+        trackMap.map(t => {
+            return console.log(t.direction)
+        })
+
+    }
+
     straightTrack = (sketch, i) => {
         switch (trackMap[i].direction) {
             case 90:
@@ -82,10 +117,47 @@ class App extends Component {
     rotateTrack = (sketch, direction) =>{
         sketch.rotate(3.14/direction);
    }
+
+   checkRotate = (sketch, i) =>{
+       if(trackMap[i].id === 1){
+            this.rotateTrack(sketch,trackMap[i].direction);
+       }
+       else if(trackMap[i].id === 2) {
+            this.rotateTrack(sketch,trackMap[i].direction);
+       }
+       else if(trackMap[i].direction !== trackMap[i+1].direction ){
+            this.rotateTrack(sketch,trackMap[i].direction);
+       }else{
+           console.log("what")
+       }
+   }
+
     clicked = (sketch) => {
         const d = sketch.dist(sketch.mouseX, sketch.mouseY, 10, 100);
         if (d < 50) {
             sketch.fill(200);
+        }
+    }
+
+    drawTracks = (sketch)=>{
+
+        for (let i = 0; i < trackMap.length; i++) {
+            switch (trackMap[i].trackType) {
+                case 'Straight':
+                    //this.checkRotate(sketch, i);
+                    this.straightTrack(sketch,i);
+
+                    break;
+
+                case 'Curve':
+
+                    break;
+
+                case 'Switch':
+
+                    break;
+
+            }
         }
     }
     canvas = (sketch) => {
@@ -99,30 +171,10 @@ class App extends Component {
             this.clicked(sketch);
         }
 
+
         sketch.draw = () => {
-            for (let i = 0; i < trackMap.length; i++) {
-                switch (trackMap[i].trackType) {
-                    case 'Straight':
-                        if(trackMap[i].id === 1 ){
-                            this.rotateTrack(sketch,trackMap[i].direction);
-                            console.log(i)
-                            console.log(trackMap[i].direction)
-                        }else if(trackMap[i].direction !== trackMap[i-1].direction ){
-                            this.rotateTrack(sketch,trackMap[i].direction);
-                        }
-                        this.straightTrack(sketch,i);
-                        break;
-
-                    case 'Curve':
-
-                        break;
-
-                    case 'Switch':
-
-                        break;
-
-                }
-            }
+            this.drawTracks(sketch);
+            sketch.rect(500,400,40,40);
         }
     }
         componentDidMount()
@@ -138,6 +190,7 @@ class App extends Component {
                     <CanvasGrid id="p5sketch"/>
                     <div>
                         <button onClick={this.addStraightTrack}>ADD Straight</button>
+                        <button onClick={this.addLowerStraightTrack}>what what</button>
                     </div>
                 </div>
             )

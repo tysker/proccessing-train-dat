@@ -27,7 +27,7 @@ export default class App extends Component {
 
         const changeSD = () => {
             //let val = slider.value();
-            this.setState({val: slider.value()})
+            this.setState({val: slider.value()});
             sketch.background(this.state.val);
         }
 

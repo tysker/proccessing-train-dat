@@ -44,6 +44,7 @@ export default class App extends Component {
             console.log(this.state.railroadMap)
         } catch (e) {
             alert(e);
+
         }
     }
     deleteLastTrack = () => {

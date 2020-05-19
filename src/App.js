@@ -27,6 +27,8 @@ export default class App extends Component {
 
 
     };
+
+
     // Returns the length of the railroad map -1
     lastTrack = () => this.state.railroadMap.length - 1;
 
@@ -48,9 +50,9 @@ export default class App extends Component {
                 this.setState({railroadMap: [...railroadMap, newTrackObject]})
                 console.log(newTrackObject)
             } else {
-                if(railroadMap[this.lastTrack].endAngle === 360) {
+                if (railroadMap[this.lastTrack].endAngle === 360) {
                     newTrackObject.endAngle = 45;
-                }else{
+                } else {
                     newTrackObject.endAngle = railroadMap[this.lastTrack()].endAngle + 45;
                 }
                 newTrackObject.startAngle = railroadMap[this.lastTrack()].startAngle;
@@ -67,7 +69,9 @@ export default class App extends Component {
         }
     }
     // Gets the new updated version of the states railroadMap
-    updatedRailroadMap = () => {updatedRailroadMap = [...this.state.railroadMap]}
+    updatedRailroadMap = () => {
+        updatedRailroadMap = [...this.state.railroadMap]
+    }
 
     addStraitTrackObject = () => {
         const {railroadMap, trackObject} = this.state;
@@ -160,18 +164,24 @@ export default class App extends Component {
         }
     }
 
+
     componentDidMount() {
-        let myp5 = new P5(this.canvas, document.getElementById('p5sketch'))
-        console.log(myp5)
+        try{
+        let myP5 = new P5(this.canvas, document.getElementById('p5sketch'))
+        console.log(myP5)
+
+        }catch (e) {
+            console.log(e)
+        }
     }
 
     render() {
         return (
             <div>
                 <CanvasGrid id="p5sketch"/>
-                <button onClick={this.addStraitTrackObject}>ADD TRACK</button>
-                <button onClick={this.addCurveTrackObject}>ADD CURVE</button>
-                <button onClick={this.deleteLastTrack}>DELETE</button>
+                <button data-testid='add-track' onClick={this.addStraitTrackObject}>ADD TRACK</button>
+                <button data-testid='add-curve' onClick={this.addCurveTrackObject}>ADD CURVE</button>
+                <button data-testid='delete-track' onClick={this.deleteLastTrack}>DELETE</button>
             </div>
         )
     }

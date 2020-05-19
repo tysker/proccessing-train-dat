@@ -34,6 +34,7 @@
     ]
   },
   "devDependencies": {
+    "canvas": "^2.6.1",
     "eslint-plugin-react-hooks": "^4.0.1"
   },
   "rules": {

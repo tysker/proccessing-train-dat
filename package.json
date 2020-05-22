@@ -9,7 +9,10 @@
     "p5": "^1.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+<<<<<<< HEAD
     "react-p5-wrapper": "^2.0.0",
+=======
+>>>>>>> 471e8227d3393328bf464bebf1011e1c43ba6feb
     "react-scripts": "3.4.1",
     "styled-components": "^5.1.0"
   },
@@ -33,5 +36,13 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "canvas": "^2.6.1",
+    "eslint-plugin-react-hooks": "^4.0.1"
+  },
+  "rules": {
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn"
   }
 }

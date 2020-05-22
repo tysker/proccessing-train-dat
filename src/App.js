@@ -142,7 +142,6 @@ export default class App extends Component {
             this.drawRailroadMap(s);
 
 
-
             //s.line(300,300,350,300);
             // s.arc(350,312.5,40,40, s.radians(270), s.radians(315));
             // s.point(350,292);

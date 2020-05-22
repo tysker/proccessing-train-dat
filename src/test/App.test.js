@@ -6,11 +6,12 @@ afterEach(cleanup);
 
 test('<App Buttons/>', () => {
     const {getByText, getByTestId} = render(<App/>)
+    console.error = jest.fn();
+
     const addTrackButton = getByTestId('add-track');
     const addCurveButton = getByTestId('add-curve');
     const addDeleteButton = getByTestId('delete-track');
 
-    console.error = jest.fn();
     expect(addTrackButton.tagName).toBe('BUTTON');
     expect(addDeleteButton.tagName).toBe('BUTTON');
     expect(addCurveButton.tagName).toBe('BUTTON');

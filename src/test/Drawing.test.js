@@ -1,11 +1,11 @@
 import React from 'react';
 import {render, cleanup} from '@testing-library/react';
-import App from '../App';
+import Drawing from "../models/Drawing";
 
 afterEach(cleanup);
 
-test('<App Buttons/>', () => {
-    const {getByTestId} = render(<App/>);
+test('<Drawing Buttons/>', () => {
+    const {getByTestId} = render(<Drawing/>);
     console.error = jest.fn();
     console.log = jest.fn();
 
@@ -26,8 +26,8 @@ test('<App Buttons/>', () => {
 
 });
 
-test('<App Calculations/>', () => {
-    const {} = render(<App/>);
+test('<Drawing Calculations/>', () => {
+    const {} = render(<Drawing/>);
 
 })
 

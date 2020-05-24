@@ -1,0 +1,21 @@
+            s.arc(300, 300, 40, 40, s.radians(270), s.radians(315));
+            s.arc(300, 300, 40, 40, s.radians(315), s.radians(360));
+            s.arc(300, 300, 40, 40, s.radians(360), s.radians(45));
+            s.arc(300, 300, 40, 40, s.radians(45), s.radians(90));
+            s.arc(300,300,40,40, s.radians(90), s.radians(135));
+            s.arc(300,300,40,40, s.radians(135), s.radians(180));
+            s.arc(300,300,40,40, s.radians(180), s.radians(225));
+            s.arc(300,300,40,40, s.radians(225), s.radians(270));
+
+            s.arc(400,300,40,40, s.radians(270), s.radians(315));
+            s.arc(400,300,40,40, s.radians(315), s.radians(360));
+
+            s.arc(400,400,40,40, s.radians(45), s.radians(90));
+            s.arc(400,400,40,40, s.radians(360), s.radians(90));
+            s.arc(400,400,40,40, s.radians(315), s.radians(90));
+            s.arc(400,400,40,40, s.radians(270), s.radians(90));
+            s.arc(400,400,40,40, s.radians(225), s.radians(90));
+            s.arc(400,400,40,40, s.radians(180), s.radians(90));
+            s.arc(400,400,40,40, s.radians(135), s.radians(90));
+            s.arc(400,400,40,40, s.radians(90), s.radians(90));
+            s.arc(400,400,40,40, s.radians(0), s.radians(90));

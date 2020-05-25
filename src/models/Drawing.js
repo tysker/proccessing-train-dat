@@ -55,6 +55,7 @@ export default class Drawing extends Component {
                 obj.x2 = lastTrack.x2 + 20;
                 obj.y2 = lastTrack.y2;
                 this.setState({railroadMap: [...railroadMap, obj]})
+                
             } else {
                 this.setState({railroadMap: [...railroadMap, obj]})
             }
@@ -124,10 +125,10 @@ export default class Drawing extends Component {
     rotateTrack = () => {
         const {railroadMap} = this.state;
         const lastTrack = railroadMap[this.lastTrack()];
-
+        const direction = lastTrack.direction;
         switch (lastTrack.trackType) {
             case "curve":
-                const direction = lastTrack.direction;
+
                 if (direction === 90) {
                     this.setState({
                         direction: lastTrack.direction = 270,
@@ -144,9 +145,18 @@ export default class Drawing extends Component {
                         startAngle: lastTrack.startAngle += 225
                     })
                 }
+            case "straight":
+                switch (lastTrack.direction) {
+
+                    case 45
+
+                }
         }
     }
 
+    rotateStraightTrack = (track,angle) =>{
+
+    }
     drawRailroadMap = (s) => {
         const {railroadMap} = this.state;
         s.background(111);

@@ -43,7 +43,7 @@ export default class Drawing extends Component {
                 obj.id = lastTrack.id + 1;
                 obj.startAngle = lastTrack.startAngle;
                 obj.endAngle = lastTrack.endAngle;
-                obj.direction = lastTrack.direction;
+                obj.direction = "east";
                 obj.trackType = "straight";
                 obj.x1 = lastTrack.x2;
                 obj.y1 = lastTrack.y2;
@@ -68,7 +68,7 @@ export default class Drawing extends Component {
 
         obj.id = lastTrack.id + 1;
         obj.trackType = "curve";
-
+        obj.direction = "";
         if (railroadMap.length > 0) {
             switch (lastTrack.direction) {
                 case "east":

@@ -30,6 +30,7 @@ class App extends Component {
                 <Drawing add={this.state}/>
             </div>
         );
+
     }
 }
 

@@ -28,7 +28,7 @@ export default class Drawing extends Component {
                 startAngle: 0,
                 endAngle: 0,
                 trackType: "",
-                direction: "east"
+                direction: 0
             },
     };
 
@@ -42,7 +42,7 @@ export default class Drawing extends Component {
                 obj.id = lastTrack.id + 1;
                 obj.startAngle = lastTrack.startAngle;
                 obj.endAngle = lastTrack.endAngle;
-                obj.direction = "east";
+                obj.direction = 0;
                 obj.trackType = "straight";
                 obj.x1 = lastTrack.x2;
                 obj.y1 = lastTrack.y2;
@@ -65,40 +65,41 @@ export default class Drawing extends Component {
 
         obj.id = lastTrack.id + 1;
         obj.trackType = "curve";
-        obj.direction = "";
+        obj.direction = 0;
         if (railroadMap.length > 0) {
             switch (lastTrack.direction) {
-                case "east":
+                case 0:
                     obj.startAngle = 270;
                     obj.endAngle = 315;
                     obj.curveX = lastTrack.x2;
                     obj.curveY = lastTrack.y2 + 20;
-                    obj.direction = "south";
-                    obj.x2 = xPointCurve(obj.curveX, 20, obj.endAngle)
-                    obj.y2 = yPointCurve(obj.curveY, 20, obj.endAngle)
+                    obj.direction = 90;
+                    obj.x2 = this.x_point_curve(obj.curveX, 20, obj.endAngle)
+                    obj.y2 = this.y_point_curve(obj.curveY, 20, obj.endAngle)
+
                     this.setState({railroadMap: [...railroadMap, obj]})
                     break;
-                case "south":
+                case 90:
                     obj.startAngle = lastTrack.endAngle;
                     obj.endAngle = lastTrack.endAngle === 360 ? 45 : lastTrack.endAngle + 45;
                     obj.curveX = lastTrack.curveX;
                     obj.curveY = lastTrack.curveY;
-                    obj.direction = "south";
-                    obj.x2 = xPointCurve(obj.curveX, 20, obj.endAngle)
-                    obj.y2 = yPointCurve(obj.curveY, 20, obj.endAngle)
+                    obj.direction = 90;
+                    obj.x2 = this.x_point_curve(obj.curveX, 20, obj.endAngle)
+                    obj.y2 = this.y_point_curve(obj.curveY, 20, obj.endAngle)
                     this.setState({railroadMap: [...railroadMap, obj]})
                     break;
-                case "north":
+                case 270:
                     obj.startAngle = lastTrack.startAngle === 45 ? 0 : lastTrack.startAngle - 45;
                     obj.endAngle = lastTrack.startAngle;
                     obj.curveX = lastTrack.curveX;
                     obj.curveY = lastTrack.curveY;
-                    obj.direction = "north";
-                    obj.x2 = xPointCurve(obj.curveX, 20, obj.endAngle)
-                    obj.y2 = yPointCurve(obj.curveY, 20, obj.endAngle)
+                    obj.direction = 270;
+                    obj.x2 = this.x_point_curve(obj.curveX, 20, obj.endAngle)
+                    obj.y2 = this.y_point_curve(obj.curveY, 20, obj.endAngle)
                     this.setState({railroadMap: [...railroadMap, obj]})
                     break;
-                case "west":
+                case 180:
                     this.setState({railroadMap: [...railroadMap, obj]})
                     break;
             }
@@ -122,17 +123,17 @@ export default class Drawing extends Component {
         switch (lastTrack.trackType) {
             case "curve":
                 const direction = lastTrack.direction;
-                if (direction === "south") {
+                if (direction === 90) {
                     this.setState({
-                        direction: lastTrack.direction = "north",
+                        direction: lastTrack.direction = 270,
                         curveY: lastTrack.curveY -= 40,
                         endAngle: lastTrack.endAngle -= 225,
                         startAngle: lastTrack.startAngle -= 225
                     })
                 }
-                if (direction === "north") {
+                if (direction === 270) {
                     this.setState({
-                        direction: lastTrack.direction = "south",
+                        direction: lastTrack.direction = 90,
                         curveY: lastTrack.curveY += 40,
                         endAngle: lastTrack.endAngle += 225,
                         startAngle: lastTrack.startAngle += 225

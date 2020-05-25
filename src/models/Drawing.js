@@ -80,7 +80,7 @@ export default class Drawing extends Component {
                     break;
                 case "south":
                     obj.startAngle = lastTrack.endAngle;
-                    obj.endAngle = lastTrack.endAngle >= 360 ? 45 : lastTrack.endAngle + 45;
+                    obj.endAngle = lastTrack.endAngle === 360 ? 45 : lastTrack.endAngle + 45;
                     obj.curveX = lastTrack.curveX;
                     obj.curveY = lastTrack.curveY;
                     obj.direction = "south";

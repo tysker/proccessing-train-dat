@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import P5 from 'p5';
 import styled from 'styled-components';
-import App from "../App";
+import {lengthOfRailMap, xPointCurve, yPointCurve} from './Setup';
 
 
 const canvasWidth = 1200;
@@ -32,15 +32,9 @@ export default class Drawing extends Component {
             },
     };
 
-    // Returns the length of the railroad map -1
-    lastTrack = () => this.state.railroadMap.length - 1;
-    // Calculates x and y coordinates for the last pixel of each curve section
-    x_point_curve = (cx, r, angle) => cx + r * Math.cos(angle * Math.PI / 180);
-    y_point_curve = (cy, r, angle) => cy + r * Math.sin(angle * Math.PI / 180);
-
     addStrait = () => {
         const {railroadMap, trackObject} = this.state;
-        const lastTrack = railroadMap[this.lastTrack()];
+        const lastTrack = railroadMap[lengthOfRailMap(railroadMap)];
         let obj = Object.create(trackObject);
 
         try {
@@ -66,7 +60,7 @@ export default class Drawing extends Component {
 
     addCurve = () => {
         const {railroadMap, trackObject} = this.state;
-        const lastTrack = railroadMap[this.lastTrack()];
+        const lastTrack = railroadMap[lengthOfRailMap(railroadMap)];
         let obj = Object.create(trackObject);
 
         obj.id = lastTrack.id + 1;
@@ -82,6 +76,7 @@ export default class Drawing extends Component {
                     obj.direction = 90;
                     obj.x2 = this.x_point_curve(obj.curveX, 20, obj.endAngle)
                     obj.y2 = this.y_point_curve(obj.curveY, 20, obj.endAngle)
+
                     this.setState({railroadMap: [...railroadMap, obj]})
                     break;
                 case 90:
@@ -123,7 +118,7 @@ export default class Drawing extends Component {
 
     rotateTrack = () => {
         const {railroadMap} = this.state;
-        const lastTrack = railroadMap[this.lastTrack()];
+        const lastTrack = railroadMap[lengthOfRailMap(railroadMap)];
 
         switch (lastTrack.trackType) {
             case "curve":

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import P5 from 'p5';
 import styled from 'styled-components';
-import App from "../App";
+import {lengthOfRailMap, xPointCurve, yPointCurve} from './Setup';
 
 
 const canvasWidth = 1200;
@@ -28,19 +28,14 @@ export default class Drawing extends Component {
                 startAngle: 0,
                 endAngle: 0,
                 trackType: "",
-                direction: 0
+                direction: "east",
+                grader: 0
             },
     };
 
-    // Returns the length of the railroad map -1
-    lastTrack = () => this.state.railroadMap.length - 1;
-    // Calculates x and y coordinates for the last pixel of each curve section
-    x_point_curve = (cx, r, angle) => cx + r * Math.cos(angle * Math.PI / 180);
-    y_point_curve = (cy, r, angle) => cy + r * Math.sin(angle * Math.PI / 180);
-
     addStrait = () => {
         const {railroadMap, trackObject} = this.state;
-        const lastTrack = railroadMap[this.lastTrack()];
+        const lastTrack = railroadMap[lengthOfRailMap(railroadMap)];
         let obj = Object.create(trackObject);
 
         try {
@@ -48,14 +43,15 @@ export default class Drawing extends Component {
                 obj.id = lastTrack.id + 1;
                 obj.startAngle = lastTrack.startAngle;
                 obj.endAngle = lastTrack.endAngle;
-                obj.direction = 0;
+                obj.direction = lastTrack.direction;
                 obj.trackType = "straight";
                 obj.x1 = lastTrack.x2;
                 obj.y1 = lastTrack.y2;
                 obj.x2 = lastTrack.x2 + 20;
                 obj.y2 = lastTrack.y2;
+                obj.grader = lastTrack.grader;
                 this.setState({railroadMap: [...railroadMap, obj]})
-                
+
             } else {
                 this.setState({railroadMap: [...railroadMap, obj]})
             }
@@ -67,45 +63,50 @@ export default class Drawing extends Component {
 
     addCurve = () => {
         const {railroadMap, trackObject} = this.state;
-        const lastTrack = railroadMap[this.lastTrack()];
+        const lastTrack = railroadMap[lengthOfRailMap(railroadMap)];
         let obj = Object.create(trackObject);
 
         obj.id = lastTrack.id + 1;
         obj.trackType = "curve";
-        obj.direction = 0;
+
         if (railroadMap.length > 0) {
             switch (lastTrack.direction) {
-                case 0:
+                case "east":
                     obj.startAngle = 270;
                     obj.endAngle = 315;
                     obj.curveX = lastTrack.x2;
                     obj.curveY = lastTrack.y2 + 20;
-                    obj.direction = 90;
-                    obj.x2 = this.x_point_curve(obj.curveX, 20, obj.endAngle)
-                    obj.y2 = this.y_point_curve(obj.curveY, 20, obj.endAngle)
+                    obj.grader = lastTrack.grader === 360 ? 45 : lastTrack.grader + 45;
+                    obj.direction = "south";
+                    obj.x2 = xPointCurve(obj.curveX, 20, obj.endAngle)
+                    obj.y2 = yPointCurve(obj.curveY, 20, obj.endAngle)
+
                     this.setState({railroadMap: [...railroadMap, obj]})
                     break;
-                case 90:
+
+                case "south":
                     obj.startAngle = lastTrack.endAngle;
-                    obj.endAngle = lastTrack.endAngle >= 360 ? 45 : lastTrack.endAngle + 45;
+                    obj.endAngle = lastTrack.endAngle === 360 ? 45 : lastTrack.endAngle + 45;
                     obj.curveX = lastTrack.curveX;
                     obj.curveY = lastTrack.curveY;
-                    obj.direction = 90;
-                    obj.x2 = this.x_point_curve(obj.curveX, 20, obj.endAngle)
-                    obj.y2 = this.y_point_curve(obj.curveY, 20, obj.endAngle)
+                    obj.grader = lastTrack.grader === 360 ? 45 : lastTrack.grader + 45;
+                    obj.direction = "south";
+                    obj.x2 = xPointCurve(obj.curveX, 20, obj.endAngle)
+                    obj.y2 = yPointCurve(obj.curveY, 20, obj.endAngle)
                     this.setState({railroadMap: [...railroadMap, obj]})
                     break;
-                case 270:
+                case "north":
                     obj.startAngle = lastTrack.startAngle === 45 ? 0 : lastTrack.startAngle - 45;
                     obj.endAngle = lastTrack.startAngle;
                     obj.curveX = lastTrack.curveX;
                     obj.curveY = lastTrack.curveY;
-                    obj.direction = 270;
-                    obj.x2 = this.x_point_curve(obj.curveX, 20, obj.endAngle)
-                    obj.y2 = this.y_point_curve(obj.curveY, 20, obj.endAngle)
+                    obj.grader = lastTrack.grader === 360 ? 45 : lastTrack.grader + 45;
+                    obj.direction = "north";
+                    obj.x2 = xPointCurve(obj.curveX, 20, obj.endAngle)
+                    obj.y2 = yPointCurve(obj.curveY, 20, obj.endAngle)
                     this.setState({railroadMap: [...railroadMap, obj]})
                     break;
-                case 180:
+                case "west":
                     this.setState({railroadMap: [...railroadMap, obj]})
                     break;
             }
@@ -124,38 +125,56 @@ export default class Drawing extends Component {
 
     rotateTrack = () => {
         const {railroadMap} = this.state;
-        const lastTrack = railroadMap[this.lastTrack()];
+        const lastTrack = railroadMap[lengthOfRailMap(railroadMap)];
         const direction = lastTrack.direction;
         switch (lastTrack.trackType) {
             case "curve":
 
-                if (direction === 90) {
+                if (direction === "south") {
                     this.setState({
-                        direction: lastTrack.direction = 270,
+                        direction: lastTrack.direction = "north",
                         curveY: lastTrack.curveY -= 40,
                         endAngle: lastTrack.endAngle -= 225,
                         startAngle: lastTrack.startAngle -= 225
                     })
                 }
-                if (direction === 270) {
+                if (direction === "north") {
                     this.setState({
-                        direction: lastTrack.direction = 90,
+                        direction: lastTrack.direction = "south",
                         curveY: lastTrack.curveY += 40,
                         endAngle: lastTrack.endAngle += 225,
                         startAngle: lastTrack.startAngle += 225
                     })
                 }
             case "straight":
-                switch (lastTrack.direction) {
-
-                    case 45
-
+                if(lastTrack.grader === 360){
+                    lastTrack.grader = 0;
+                }else{
+                    lastTrack.grader = lastTrack.grader+45;
                 }
+                this.rotateStraightTrack(lastTrack);
+
         }
     }
 
-    rotateStraightTrack = (track,angle) =>{
+    rotateStraightTrack = (track) =>{
 
+        const centerX = (track.x2 - track.x1) / 2 + track.x1;
+        const centerY = (track.y2 - track.y1) / 2 + track.y1;
+
+        const radius =10;
+
+        let newx1 = xPointCurve(centerX,radius,track.grader+180)
+        let newy1 = yPointCurve(centerY,radius,track.grader+180)
+        let newx2 = xPointCurve(centerX,radius,track.grader)
+        let newy2 = yPointCurve(centerY,radius,track.grader)
+        this.setState({
+            x1: track.x1 = newx1,
+            y1: track.y1 = newy1,
+            x2: track.x2 = newx2,
+            y2: track.y2 = newy2
+
+        })
     }
     drawRailroadMap = (s) => {
         const {railroadMap} = this.state;

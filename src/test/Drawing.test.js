@@ -2,6 +2,7 @@ import React from 'react';
 import {render, cleanup} from '@testing-library/react';
 import Drawing from "../models/Drawing";
 
+
 afterEach(cleanup);
 
 test('<Drawing Buttons/>', () => {
@@ -26,8 +27,4 @@ test('<Drawing Buttons/>', () => {
 
 });
 
-test('<Drawing Calculations/>', () => {
-    const {} = render(<Drawing/>);
-
-})
 

@@ -93,8 +93,6 @@ export default class Drawing extends Component {
             case 225:
                 obj.x2 = xPointCurve(centerX,radius,225);
                 obj.y2 = yPointCurve(centerY,radius,225);
-                console.log(obj.x2)
-                console.log(obj.y2)
                 break;
             case 270:
                 obj.y2 = lastTrack.y2 - railLength;

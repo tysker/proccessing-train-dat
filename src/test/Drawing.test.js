@@ -10,7 +10,7 @@ test('<Drawing Buttons/>', () => {
     console.error = jest.fn();
     console.log = jest.fn();
 
-    const addTrackButton = getByTestId('add-track');
+    const addTrackButton = getByTestId('add-straight');
     const addCurveButton = getByTestId('add-curve');
     const addDeleteButton = getByTestId('delete-track');
     const addRotateButton = getByTestId('rotate-track');

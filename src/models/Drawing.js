@@ -37,7 +37,7 @@ export default class Drawing extends Component {
         const {railroadMap, trackObject} = this.state;
         const lastTrack = railroadMap[lengthOfRailMap(railroadMap)];
         let obj = Object.create(trackObject);
-
+        let tempObj = this.straightTrackDirection(obj, lastTrack);
         try {
             if (railroadMap.length > 0) {
                 obj.id = lastTrack.id + 1;
@@ -45,11 +45,12 @@ export default class Drawing extends Component {
                 obj.endAngle = lastTrack.endAngle;
                 obj.direction = "east";
                 obj.trackType = "straight";
-                obj.x1 = lastTrack.x2;
-                obj.y1 = lastTrack.y2;
-                obj.x2 = lastTrack.x2 + 20;
-                obj.y2 = lastTrack.y2;
                 obj.grader = lastTrack.grader;
+                obj.x1 = tempObj.x1;
+                obj.y1 = tempObj.y1;
+                obj.x2 = tempObj.x2;
+                obj.y2 = tempObj.y2;
+
                 this.setState({railroadMap: [...railroadMap, obj]})
 
             } else {
@@ -89,7 +90,7 @@ export default class Drawing extends Component {
                     obj.endAngle = lastTrack.endAngle === 360 ? 45 : lastTrack.endAngle + 45;
                     obj.curveX = lastTrack.curveX;
                     obj.curveY = lastTrack.curveY;
-                    obj.grader = lastTrack.grader === 360 ? 45 : lastTrack.grader + 45;
+                    obj.grader = lastTrack.grader  === 360 ? 45 : lastTrack.grader + 45;
                     obj.direction = "south";
                     obj.x2 = xPointCurve(obj.curveX, 20, obj.endAngle)
                     obj.y2 = yPointCurve(obj.curveY, 20, obj.endAngle)
@@ -113,6 +114,10 @@ export default class Drawing extends Component {
         }
     }
 
+    setCurveState = () => {
+
+    }
+
     deleteLastTrack = () => {
         const {railroadMap} = this.state;
         let lastId = railroadMap[railroadMap.length - 1].id;
@@ -121,6 +126,53 @@ export default class Drawing extends Component {
         } else {
             alert("You reached the last track!")
         }
+    }
+
+    straightTrackDirection = (obj, lastTrack) => {
+        const railLength = 20;
+        const radius = 10;
+        const centerX = lastTrack.x2 + radius;
+        const centerY = lastTrack.y2 + radius;
+        obj.x1 = lastTrack.x2;
+        obj.y1 = lastTrack.y2;
+        obj.x2 = lastTrack.x2;
+        obj.y2 = lastTrack.y2;
+        switch(lastTrack.grader){
+            case 0:
+                obj.x2 = lastTrack.x2 + railLength;
+                break;
+            case 45:
+                obj.x2 = xPointCurve(centerX,radius,45);
+                obj.y2 = yPointCurve(centerY,radius,45);
+                break;
+            case 90:
+                obj.y2 = lastTrack.y2 + railLength;
+                break;
+            case 135:
+
+                obj.x2 = xPointCurve(centerX,radius,135);
+                obj.y2 = yPointCurve(centerY,radius,135);
+                break;
+            case 180:
+                obj.x2 = lastTrack.x2 - railLength;
+                break;
+            case 225:
+                obj.x2 = xPointCurve(centerX,radius,225);
+                obj.y2 = yPointCurve(centerY,radius,225);
+                break;
+            case 270:
+                obj.y2 = lastTrack.y2 - railLength;
+                break;
+            case 315:
+                obj.x2 = xPointCurve(centerX,radius,315);
+                obj.y2 = yPointCurve(centerY,radius,315);
+                break;
+            case 360:
+                obj.x2 = lastTrack.x2 + railLength;
+                break;
+        }
+
+        return obj;
     }
 
     rotateTrack = () => {

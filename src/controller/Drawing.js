@@ -5,8 +5,6 @@ import {lengthOfRailMap, xPointCurve, yPointCurve, compass} from '../models/Setu
 import {canvasWidth, canvasHeight, curveWidth, curveHeight, CanvasGrid, ButtonGrid} from '../models/Constants'
 import {curveClockWise, curveAntiClockWise} from '../models/Curve';
 
-let rotateCount = 0;
-let isToggle = false;
 
 export default class Drawing extends Component {
     constructor(props) {
@@ -27,6 +25,11 @@ export default class Drawing extends Component {
                     endAngle: 0,
                     trackType: "",
                     direction: "east",
+                    originalDirection: "east",
+                    OCX: 0,
+                    OCY:0,
+                    OX2:0,
+                    OY2:0,
                     grader: 0,
                     clockwise: true
                 },
@@ -122,8 +125,14 @@ export default class Drawing extends Component {
 
     addCurve = () => {
         const {railroadMap, trackObject} = this.state;
+        const lastTrack = railroadMap[lengthOfRailMap(railroadMap)];
         let obj = Object.create(trackObject);
-        obj = curveClockWise(railroadMap, trackObject, obj);
+        if(lastTrack.clockwise){
+            obj = curveClockWise(railroadMap, trackObject, obj);
+        }else{
+            obj = curveAntiClockWise(railroadMap, trackObject, obj);
+        }
+
         this.setState({railroadMap: [...railroadMap, obj]})
     }
 
@@ -160,54 +169,12 @@ export default class Drawing extends Component {
     };
 
 
-    // rotateTrack = (s) => {
-    //     console.log("HALLO")
-    //     const {railroadMap} = this.state;
-    //     const lastTrack = railroadMap[lengthOfRailMap(railroadMap)];
-    //     try {
-    //         switch (lastTrack.trackType) {
-    //             case "curve":
-    //                 console.log(isToggle)
-    //                 lastTrack.curveX = xPointCurve(lastTrack.x2, 20, lastTrack.startAngle);
-    //                 lastTrack.curveY = yPointCurve(lastTrack.y2, 20, lastTrack.startAngle);
-    //                 !isToggle ? lastTrack.startAngle -= 225 : lastTrack.startAngle += 225;
-    //                 !isToggle ? lastTrack.endAngle -= 225 : lastTrack.endAngle += 225;
-
-    //                 isToggle = !isToggle;
-    //                 console.log(isToggle)
-    //                 lastTrack.direction = "south-east";
-    //                 console.log(this.state.railroadMap)
-    //                 break;
-    //             case "straight":
-    //                 lastTrack.grader = lastTrack.grader === 360 ? 45 : lastTrack.grader + 45;
-    //                 this.rotateStraightTrack(lastTrack);
-    //         }
-    //     } catch (e) {
-    //         alert(e);
-    //     }
-    // }
-
     rotateTrack = (s) => {
         const {railroadMap} = this.state;
         const lastTrack = railroadMap[lengthOfRailMap(railroadMap)];
         try {
             switch (lastTrack.trackType) {
                 case "curve":
-                    // if (lastTrack.direction === "south") {
-                    //     lastTrack.curveX = xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle);
-                    //     lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
-                    //     lastTrack.startAngle -= 225;
-                    //     lastTrack.endAngle -= 225;
-                    //     lastTrack.direction = "north";
-                    //     console.log(this.state.railroadMap)
-                    // } else if (lastTrack.direction === "north") {
-                    //     lastTrack.curveX = xPointCurve(lastTrack.curveX, 40, lastTrack.endAngle);
-                    //     lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.endAngle);
-                    //     lastTrack.startAngle += 225;
-                    //     lastTrack.endAngle += 225;
-                    //     lastTrack.direction = "south";
-                    //     console.log(this.state.railroadMap)
-                    // }
                     this.rotateCurveTrack(lastTrack);
                     break;
                 case "straight":
@@ -221,65 +188,196 @@ export default class Drawing extends Component {
     }
 
     rotateCurveTrack = (lastTrack) => {
-        switch (lastTrack.direction) {
+
+        console.log(lastTrack.originalDirection);
+        switch (lastTrack.originalDirection) {
             case "east":
-                lastTrack.curveX = xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle);
-                lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
-                lastTrack.startAngle -= 225;
-                lastTrack.endAngle -= 225;
-                lastTrack.direction = "south-east";
+                if(lastTrack.clockwise === true){
+                    lastTrack.curveX = xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle);
+                    lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
+                    lastTrack.startAngle -= 225;
+                    lastTrack.endAngle -= 225;
+                    lastTrack.x2 = xPointCurve(lastTrack.curveX, 20, lastTrack.startAngle);
+                    lastTrack.y2 = yPointCurve(lastTrack.curveY, 20, lastTrack.startAngle);
+                    lastTrack.direction = "north-east";
+                    lastTrack.clockwise = false;
+                    lastTrack.grader = 315;
+                }else if (lastTrack.clockwise === false){
+                    lastTrack.curveX = lastTrack.OCX;
+                    lastTrack.curveY = lastTrack.OCY;
+                    lastTrack.startAngle += 225;
+                    lastTrack.endAngle += 225;
+                    lastTrack.direction = "south-east";
+                    lastTrack.clockwise = true;
+                    lastTrack.grader = 45;
+                    lastTrack.x2 = lastTrack.OX2;
+                    lastTrack.y2 = lastTrack.OY2;
+                }
                 break;
             case "south-east":
-                lastTrack.curveX = xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle);
-                lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
-                lastTrack.startAngle -= 225;
-                lastTrack.endAngle -= 225;
-                lastTrack.direction = "south";
+                if(lastTrack.clockwise === true){
+                    lastTrack.curveX = xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle);
+                    lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
+                    lastTrack.startAngle -= 225;
+                    lastTrack.endAngle -= 225;
+                    lastTrack.x2 = xPointCurve(lastTrack.curveX, 20, lastTrack.startAngle);
+                    lastTrack.y2 = yPointCurve(lastTrack.curveY, 20, lastTrack.startAngle);
+                    lastTrack.direction = "east";
+                    lastTrack.grader = 0;
+                    lastTrack.clockwise = false;
+                }else if (lastTrack.clockwise === false){
+                    lastTrack.curveX = lastTrack.OCX;
+                    lastTrack.curveY = lastTrack.OCY;
+                    lastTrack.startAngle += 225;
+                    lastTrack.endAngle += 225;
+                    lastTrack.direction = "south";
+                    lastTrack.grader = 90;
+                    lastTrack.clockwise = true;
+                    lastTrack.x2 = lastTrack.OX2;
+                    lastTrack.y2 = lastTrack.OY2;
+                }
                 break;
             case "south":
-                lastTrack.curveX = xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle);
-                lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
-                lastTrack.startAngle -= 225;
-                lastTrack.endAngle -= 225;
-                lastTrack.direction = "south-west";
+                if(lastTrack.clockwise === true){
+                    lastTrack.curveX = xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle);
+                    lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
+                    lastTrack.startAngle -= 225;
+                    lastTrack.endAngle -= 225;
+                    lastTrack.x2 = xPointCurve(lastTrack.curveX, 20, lastTrack.startAngle);
+                    lastTrack.y2 = yPointCurve(lastTrack.curveY, 20, lastTrack.startAngle);
+                    lastTrack.direction = "south-east";
+                    lastTrack.clockwise = false;
+                    lastTrack.grader = 45;
+                }else if (lastTrack.clockwise === false){
+                    lastTrack.curveX = lastTrack.OCX;
+                    lastTrack.curveY = lastTrack.OCY;
+                    lastTrack.startAngle += 225;
+                    lastTrack.endAngle += 225;
+                    lastTrack.direction = "south-west";
+                    lastTrack.grader = 135;
+                    lastTrack.clockwise = true;
+                    lastTrack.x2 = lastTrack.OX2;
+                    lastTrack.y2 = lastTrack.OY2;
+                }
                 break;
             case "south-west":
-                lastTrack.curveX = xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle);
-                lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
-                lastTrack.startAngle -= 225;
-                lastTrack.endAngle -= 225;
-                lastTrack.direction = "west";
+                if(lastTrack.clockwise === true){
+                    lastTrack.curveX = xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle);
+                    lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
+                    lastTrack.startAngle -= 225;
+                    lastTrack.endAngle -= 225;
+                    lastTrack.x2 = xPointCurve(lastTrack.curveX, 20, lastTrack.startAngle);
+                    lastTrack.y2 = yPointCurve(lastTrack.curveY, 20, lastTrack.startAngle);
+                    lastTrack.direction = "south";
+                    lastTrack.clockwise = false;
+                    lastTrack.grader = 90;
+                }else if (lastTrack.clockwise === false){
+                    lastTrack.curveX = lastTrack.OCX;
+                    lastTrack.curveY = lastTrack.OCY;
+                    lastTrack.startAngle += 225;
+                    lastTrack.endAngle += 225;
+                    lastTrack.direction = "west";
+                    lastTrack.clockwise = true;
+                    lastTrack.grader = 180;
+                    lastTrack.x2 = lastTrack.OX2;
+                    lastTrack.y2 = lastTrack.OY2;
+                }
                 break;
             case "west":
-                lastTrack.curveX = xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle);
-                lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
-                lastTrack.startAngle -= 225;
-                lastTrack.endAngle -= 225;
-                lastTrack.direction = "north-west";
+                if(lastTrack.clockwise === true){
+                    lastTrack.curveX = xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle);
+                    lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
+                    lastTrack.startAngle -= 225;
+                    lastTrack.endAngle -= 225;
+                    lastTrack.x2 = xPointCurve(lastTrack.curveX, 20, lastTrack.startAngle);
+                    lastTrack.y2 = yPointCurve(lastTrack.curveY, 20, lastTrack.startAngle);
+                    lastTrack.direction = "south-west";
+                    lastTrack.clockwise = false;
+                    lastTrack.grader = 135;
+                }else if (lastTrack.clockwise === false){
+                    lastTrack.curveX = lastTrack.OCX;
+                    lastTrack.curveY = lastTrack.OCY;
+                    lastTrack.startAngle += 225;
+                    lastTrack.endAngle += 225;
+                    lastTrack.direction = "north-west";
+                    lastTrack.clockwise = true;
+                    lastTrack.grader = 225;
+                    lastTrack.x2 = lastTrack.OX2;
+                    lastTrack.y2 = lastTrack.OY2;
+                }
                 break;
             case "north-west":
-                lastTrack.curveX = xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle);
-                lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
-                lastTrack.startAngle -= 225;
-                lastTrack.endAngle -= 225;
-                lastTrack.direction = "north";
+                if(lastTrack.clockwise === true){
+                    lastTrack.curveX = xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle);
+                    lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
+                    lastTrack.startAngle -= 225;
+                    lastTrack.endAngle -= 225;
+                    lastTrack.x2 = xPointCurve(lastTrack.curveX, 20, lastTrack.startAngle);
+                    lastTrack.y2 = yPointCurve(lastTrack.curveY, 20, lastTrack.startAngle);
+                    lastTrack.direction = "west";
+                    lastTrack.clockwise = false;
+                    lastTrack.grader = 180;
+                }else if (lastTrack.clockwise === false){
+                    lastTrack.curveX = lastTrack.OCX;
+                    lastTrack.curveY = lastTrack.OCY;
+                    lastTrack.startAngle += 225;
+                    lastTrack.endAngle += 225;
+                    lastTrack.direction = "north";
+                    lastTrack.clockwise = true;
+                    lastTrack.grader = 270;
+                    lastTrack.x2 = lastTrack.OX2;
+                    lastTrack.y2 = lastTrack.OY2;
+                }
                 break;
             case "north":
-                lastTrack.curveX = xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle);
-                lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
-                lastTrack.startAngle -= 225;
-                lastTrack.endAngle -= 225;
-                lastTrack.direction = "north-east";
+                if(lastTrack.clockwise === true){
+                    lastTrack.curveX = xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle);
+                    lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
+                    lastTrack.startAngle -= 225;
+                    lastTrack.endAngle -= 225;
+                    lastTrack.x2 = xPointCurve(lastTrack.curveX, 20, lastTrack.startAngle);
+                    lastTrack.y2 = yPointCurve(lastTrack.curveY, 20, lastTrack.startAngle);
+                    lastTrack.direction = "north-west";
+                    lastTrack.clockwise = false;
+                    lastTrack.grader = 225;
+                }else if (lastTrack.clockwise === false){
+                    lastTrack.curveX = lastTrack.OCX;
+                    lastTrack.curveY = lastTrack.OCY;
+                    lastTrack.startAngle += 225;
+                    lastTrack.endAngle += 225;
+                    lastTrack.direction = "north-east";
+                    lastTrack.clockwise = true;
+                    lastTrack.grader = 315;
+                    lastTrack.x2 = lastTrack.OX2;
+                    lastTrack.y2 = lastTrack.OY2;
+                }
                 break;
             case "north-east":
-                lastTrack.curveX = xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle);
-                lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
-                lastTrack.startAngle -= 225;
-                lastTrack.endAngle -= 225;
-                lastTrack.direction = "east";
+                if(lastTrack.clockwise === true){
+                    lastTrack.curveX = xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle);
+                    lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
+                    lastTrack.startAngle -= 225;
+                    lastTrack.endAngle -= 225;
+                    lastTrack.x2 = xPointCurve(lastTrack.curveX, 20, lastTrack.startAngle);
+                    lastTrack.y2 = yPointCurve(lastTrack.curveY, 20, lastTrack.startAngle);
+                    lastTrack.direction = "north";
+                    lastTrack.clockwise = false;
+                    lastTrack.grader = 270;
+                }else if (lastTrack.clockwise === false){
+                    lastTrack.curveX = lastTrack.OCX;
+                    lastTrack.curveY = lastTrack.OCY;
+                    lastTrack.startAngle += 225;
+                    lastTrack.endAngle += 225;
+                    lastTrack.direction = "east";
+                    lastTrack.clockwise = true;
+                    lastTrack.grader = 360;
+                    lastTrack.x2 = lastTrack.OX2;
+                    lastTrack.y2 = lastTrack.OY2;
+                }
                 break;
         }
     }
+
 
 
     rotateStraightTrack = (track) => {
@@ -316,7 +414,6 @@ export default class Drawing extends Component {
             case 360:
                 rotateCount = 0;
                 break;
-
         }
 
         this.setState({

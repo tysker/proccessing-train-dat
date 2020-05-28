@@ -30,8 +30,8 @@ export default class Drawing extends Component {
                     originalDirection: "east",
                     OCX: 0,
                     OCY:0,
-                    OSA:0,
-                    OEA:0,
+                    OX2:0,
+                    OY2:0,
                     grader: 0,
                     clockwise: true
                 },
@@ -235,15 +235,21 @@ export default class Drawing extends Component {
                     lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
                     lastTrack.startAngle -= 225;
                     lastTrack.endAngle -= 225;
-                    lastTrack.direction = "south-east";
+                    lastTrack.x2 = xPointCurve(lastTrack.curveX, 20, lastTrack.startAngle);
+                    lastTrack.y2 = yPointCurve(lastTrack.curveY, 20, lastTrack.startAngle);
+                    lastTrack.direction = "north-east";
                     lastTrack.clockwise = false;
+                    lastTrack.grader = 315;
                 }else if (lastTrack.clockwise === false){
                     lastTrack.curveX = lastTrack.OCX;
                     lastTrack.curveY = lastTrack.OCY;
                     lastTrack.startAngle += 225;
                     lastTrack.endAngle += 225;
-                    lastTrack.direction = "north-east";
+                    lastTrack.direction = "south-east";
                     lastTrack.clockwise = true;
+                    lastTrack.grader = 45;
+                    lastTrack.x2 = lastTrack.OX2;
+                    lastTrack.y2 = lastTrack.OY2;
                 }
                 break;
             case "south-east":
@@ -252,15 +258,21 @@ export default class Drawing extends Component {
                     lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
                     lastTrack.startAngle -= 225;
                     lastTrack.endAngle -= 225;
-                    lastTrack.direction = "south";
+                    lastTrack.x2 = xPointCurve(lastTrack.curveX, 20, lastTrack.startAngle);
+                    lastTrack.y2 = yPointCurve(lastTrack.curveY, 20, lastTrack.startAngle);
+                    lastTrack.direction = "east";
+                    lastTrack.grader = 0;
                     lastTrack.clockwise = false;
                 }else if (lastTrack.clockwise === false){
                     lastTrack.curveX = lastTrack.OCX;
                     lastTrack.curveY = lastTrack.OCY;
                     lastTrack.startAngle += 225;
                     lastTrack.endAngle += 225;
-                    lastTrack.direction = "east";
+                    lastTrack.direction = "south";
+                    lastTrack.grader = 90;
                     lastTrack.clockwise = true;
+                    lastTrack.x2 = lastTrack.OX2;
+                    lastTrack.y2 = lastTrack.OY2;
                 }
                 break;
             case "south":
@@ -269,15 +281,21 @@ export default class Drawing extends Component {
                     lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
                     lastTrack.startAngle -= 225;
                     lastTrack.endAngle -= 225;
-                    lastTrack.direction = "south-west";
+                    lastTrack.x2 = xPointCurve(lastTrack.curveX, 20, lastTrack.startAngle);
+                    lastTrack.y2 = yPointCurve(lastTrack.curveY, 20, lastTrack.startAngle);
+                    lastTrack.direction = "south-east";
                     lastTrack.clockwise = false;
+                    lastTrack.grader = 45;
                 }else if (lastTrack.clockwise === false){
                     lastTrack.curveX = lastTrack.OCX;
                     lastTrack.curveY = lastTrack.OCY;
                     lastTrack.startAngle += 225;
                     lastTrack.endAngle += 225;
-                    lastTrack.direction = "south-east";
+                    lastTrack.direction = "south-west";
+                    lastTrack.grader = 135;
                     lastTrack.clockwise = true;
+                    lastTrack.x2 = lastTrack.OX2;
+                    lastTrack.y2 = lastTrack.OY2;
                 }
                 break;
             case "south-west":
@@ -286,15 +304,21 @@ export default class Drawing extends Component {
                     lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
                     lastTrack.startAngle -= 225;
                     lastTrack.endAngle -= 225;
-                    lastTrack.direction = "west";
+                    lastTrack.x2 = xPointCurve(lastTrack.curveX, 20, lastTrack.startAngle);
+                    lastTrack.y2 = yPointCurve(lastTrack.curveY, 20, lastTrack.startAngle);
+                    lastTrack.direction = "south";
                     lastTrack.clockwise = false;
+                    lastTrack.grader = 90;
                 }else if (lastTrack.clockwise === false){
                     lastTrack.curveX = lastTrack.OCX;
                     lastTrack.curveY = lastTrack.OCY;
                     lastTrack.startAngle += 225;
                     lastTrack.endAngle += 225;
-                    lastTrack.direction = "south";
+                    lastTrack.direction = "west";
                     lastTrack.clockwise = true;
+                    lastTrack.grader = 180;
+                    lastTrack.x2 = lastTrack.OX2;
+                    lastTrack.y2 = lastTrack.OY2;
                 }
                 break;
             case "west":
@@ -303,15 +327,21 @@ export default class Drawing extends Component {
                     lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
                     lastTrack.startAngle -= 225;
                     lastTrack.endAngle -= 225;
-                    lastTrack.direction = "north-west";
+                    lastTrack.x2 = xPointCurve(lastTrack.curveX, 20, lastTrack.startAngle);
+                    lastTrack.y2 = yPointCurve(lastTrack.curveY, 20, lastTrack.startAngle);
+                    lastTrack.direction = "south-west";
                     lastTrack.clockwise = false;
+                    lastTrack.grader = 135;
                 }else if (lastTrack.clockwise === false){
                     lastTrack.curveX = lastTrack.OCX;
                     lastTrack.curveY = lastTrack.OCY;
                     lastTrack.startAngle += 225;
                     lastTrack.endAngle += 225;
-                    lastTrack.direction = "south-west";
+                    lastTrack.direction = "north-west";
                     lastTrack.clockwise = true;
+                    lastTrack.grader = 225;
+                    lastTrack.x2 = lastTrack.OX2;
+                    lastTrack.y2 = lastTrack.OY2;
                 }
                 break;
             case "north-west":
@@ -320,15 +350,21 @@ export default class Drawing extends Component {
                     lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
                     lastTrack.startAngle -= 225;
                     lastTrack.endAngle -= 225;
-                    lastTrack.direction = "north";
+                    lastTrack.x2 = xPointCurve(lastTrack.curveX, 20, lastTrack.startAngle);
+                    lastTrack.y2 = yPointCurve(lastTrack.curveY, 20, lastTrack.startAngle);
+                    lastTrack.direction = "west";
                     lastTrack.clockwise = false;
+                    lastTrack.grader = 180;
                 }else if (lastTrack.clockwise === false){
                     lastTrack.curveX = lastTrack.OCX;
                     lastTrack.curveY = lastTrack.OCY;
                     lastTrack.startAngle += 225;
                     lastTrack.endAngle += 225;
-                    lastTrack.direction = "west";
+                    lastTrack.direction = "north";
                     lastTrack.clockwise = true;
+                    lastTrack.grader = 270;
+                    lastTrack.x2 = lastTrack.OX2;
+                    lastTrack.y2 = lastTrack.OY2;
                 }
                 break;
             case "north":
@@ -337,15 +373,21 @@ export default class Drawing extends Component {
                     lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
                     lastTrack.startAngle -= 225;
                     lastTrack.endAngle -= 225;
-                    lastTrack.direction = "north-east";
+                    lastTrack.x2 = xPointCurve(lastTrack.curveX, 20, lastTrack.startAngle);
+                    lastTrack.y2 = yPointCurve(lastTrack.curveY, 20, lastTrack.startAngle);
+                    lastTrack.direction = "north-west";
                     lastTrack.clockwise = false;
+                    lastTrack.grader = 225;
                 }else if (lastTrack.clockwise === false){
                     lastTrack.curveX = lastTrack.OCX;
                     lastTrack.curveY = lastTrack.OCY;
                     lastTrack.startAngle += 225;
                     lastTrack.endAngle += 225;
-                    lastTrack.direction = "north-west";
+                    lastTrack.direction = "north-east";
                     lastTrack.clockwise = true;
+                    lastTrack.grader = 315;
+                    lastTrack.x2 = lastTrack.OX2;
+                    lastTrack.y2 = lastTrack.OY2;
                 }
                 break;
             case "north-east":
@@ -354,15 +396,21 @@ export default class Drawing extends Component {
                     lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
                     lastTrack.startAngle -= 225;
                     lastTrack.endAngle -= 225;
-                    lastTrack.direction = "east";
+                    lastTrack.x2 = xPointCurve(lastTrack.curveX, 20, lastTrack.startAngle);
+                    lastTrack.y2 = yPointCurve(lastTrack.curveY, 20, lastTrack.startAngle);
+                    lastTrack.direction = "north";
                     lastTrack.clockwise = false;
+                    lastTrack.grader = 270;
                 }else if (lastTrack.clockwise === false){
                     lastTrack.curveX = lastTrack.OCX;
                     lastTrack.curveY = lastTrack.OCY;
                     lastTrack.startAngle += 225;
                     lastTrack.endAngle += 225;
-                    lastTrack.direction = "north";
+                    lastTrack.direction = "east";
                     lastTrack.clockwise = true;
+                    lastTrack.grader = 360;
+                    lastTrack.x2 = lastTrack.OX2;
+                    lastTrack.y2 = lastTrack.OY2;
                 }
                 break;
         }

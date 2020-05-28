@@ -21,6 +21,8 @@ export const curveClockWise = (railroadMap, trackObject, obj) => {
                     obj.grader = 45;
                     obj.x2 = xPointCurve(obj.curveX, 20, obj.endAngle)
                     obj.y2 = yPointCurve(obj.curveY, 20, obj.endAngle)
+                    obj.OX2 = obj.x2;
+                    obj.OY2 = obj.y2;
                     console.log(obj.direction)
                     return obj;
                 case "south-east":

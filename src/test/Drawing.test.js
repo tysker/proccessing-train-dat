@@ -1,6 +1,6 @@
 import React from 'react';
 import {render, cleanup} from '@testing-library/react';
-import Drawing from "../models/Drawing";
+import Drawing from "../controller/Drawing";
 
 
 afterEach(cleanup);

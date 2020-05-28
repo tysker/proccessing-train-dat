@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import Drawing from "./models/Drawing";
+import Drawing from "./controller/Drawing";
 import './style/App.css'
 
 
@@ -9,10 +9,11 @@ class App extends Component {
         return (
             <div>
                 <Drawing add={this.state}/>
+                <Drawing/>
+
             </div>
         );
     }
 }
-
 export default App;
 

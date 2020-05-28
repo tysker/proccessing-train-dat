@@ -4,3 +4,5 @@ export const lengthOfRailMap = (rm) => rm.length - 1;
 export const xPointCurve = (cx, r, angle) => cx + r * Math.cos(angle * Math.PI / 180);
 export const yPointCurve = (cy, r, angle) => cy + r * Math.sin(angle * Math.PI / 180);
 
+export const compass = ["south-east","south","south-west","west","north-west","north", "north-east","east"];
+

@@ -7,7 +7,7 @@ class App extends Component {
     render() {
         return (
             <div>
-                <Drawing add={this.state}/>
+                <Drawing/>
             </div>
         );
 

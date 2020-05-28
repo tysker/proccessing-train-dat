@@ -1,30 +1,38 @@
 import React, {Component} from 'react';
 import P5 from 'p5';
+import '../style/Drawing.css';
 import {lengthOfRailMap, xPointCurve, yPointCurve, compass} from '../models/Setup';
-import {canvasWidth, canvasHeight, curveWidth, curveHeight, isToggle, rotateCount, CanvasGrid, ButtonGrid} from '../models/Constants'
-import {curve} from '../models/Curve';
+import {canvasWidth, canvasHeight, curveWidth, curveHeight, CanvasGrid, ButtonGrid} from '../models/Constants'
+import {curveClockWise, curveAntiClockWise} from '../models/Curve';
 
+let rotateCount = 0;
+let isToggle = false;
 
 export default class Drawing extends Component {
+    constructor(props) {
+        super(props)
+        this.myRef = React.createRef();
+        this.state = {
+            railroadMap: [],
+            trackObject:
+                {
+                    id: 0,
+                    x1: 300,
+                    y1: 300,
+                    x2: 320,
+                    y2: 300,
+                    curveX: 0,
+                    curveY: 0,
+                    startAngle: 0,
+                    endAngle: 0,
+                    trackType: "",
+                    direction: "east",
+                    grader: 0,
+                    clockwise: true
+                },
+        };
+    }
 
-    state = {
-        railroadMap: [],
-        trackObject:
-            {
-                id: 0,
-                x1: 300,
-                y1: 300,
-                x2: 320,
-                y2: 300,
-                curveX: 0,
-                curveY: 0,
-                startAngle: 0,
-                endAngle: 0,
-                trackType: "",
-                direction: "east",
-                grader: 0
-            },
-    };
 
 
     addStraight = () => {
@@ -39,11 +47,12 @@ export default class Drawing extends Component {
                 obj.endAngle = lastTrack.endAngle;
                 obj.trackType = "straight";
                 obj.grader = lastTrack.grader;
+                obj.direction = lastTrack.direction;
                 obj.x1 = tempObj.x1;
                 obj.y1 = tempObj.y1;
                 obj.x2 = tempObj.x2;
                 obj.y2 = tempObj.y2;
-
+                console.log("Hallo from addStraight: " + obj.direction)
                 this.setState({railroadMap: [...railroadMap, obj]})
 
             } else {
@@ -108,17 +117,19 @@ export default class Drawing extends Component {
     addCurve = () => {
         const {railroadMap, trackObject} = this.state;
         let obj = Object.create(trackObject);
-        obj = curve(railroadMap, trackObject, obj);
+        obj = curveClockWise(railroadMap, trackObject, obj);
         this.setState({railroadMap: [...railroadMap, obj]})
     }
 
 
     deleteLastTrack = () => {
         const {railroadMap} = this.state;
-        let lastId = railroadMap[railroadMap.length - 1].id;
+        const lastTrack = railroadMap[lengthOfRailMap(railroadMap)];
+
         try {
             if (railroadMap.length > 1) {
-                this.setState({railroadMap: [...railroadMap.filter((track) => track.id !== lastId)]})
+                this.setState({railroadMap: [...railroadMap.filter((track) => track.id !== lastTrack.id)]})
+
             } else {
                 alert("You reached the last track!")
             }
@@ -142,58 +153,17 @@ export default class Drawing extends Component {
         })
     };
 
-    rotateTrack = (s) => {
-        console.log("HALLO")
-        // const {railroadMap} = this.state;
-        // const lastTrack = railroadMap[lengthOfRailMap(railroadMap)];
-        // try {
-        //     switch (lastTrack.trackType) {
-        //         case "curve":
-        //             console.log(isToggle)
-        //             lastTrack.curveX = xPointCurve(lastTrack.x2, 20, lastTrack.startAngle);
-        //             lastTrack.curveY = yPointCurve(lastTrack.y2, 20, lastTrack.startAngle);
-        //             !isToggle ? lastTrack.startAngle -= 225 : lastTrack.startAngle += 225;
-        //             !isToggle ? lastTrack.endAngle -= 225 : lastTrack.endAngle += 225;
-        //
-        //
-        //
-        //             isToggle = !isToggle;
-        //             console.log(isToggle)
-        //             lastTrack.direction = "south-east";
-        //             console.log(this.state.railroadMap)
-        //             break;
-        //         case "straight":
-        //             lastTrack.grader = lastTrack.grader === 360 ? 45 : lastTrack.grader + 45;
-        //             this.rotateStraightTrack(lastTrack);
-        //     }
-        // } catch (e) {
-        //     alert(e);
-        // }
-    }
-    // rotateTrack = (s) => {
+    // rotateTrack = () => {
     //     const {railroadMap} = this.state;
     //     const lastTrack = railroadMap[lengthOfRailMap(railroadMap)];
     //     try {
     //         switch (lastTrack.trackType) {
     //             case "curve":
-    //                 if (lastTrack.direction === "south") {
-    //                     lastTrack.curveX = xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle);
-    //                     lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
-    //                     lastTrack.startAngle -= 225;
-    //                     lastTrack.endAngle -= 225;
-    //                     lastTrack.direction = "north";
-    //                     console.log(this.state.railroadMap)
-    //                 } else if (lastTrack.direction === "north") {
-    //                     lastTrack.curveX = xPointCurve(lastTrack.curveX, 40, lastTrack.endAngle);
-    //                     lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.endAngle);
-    //                     lastTrack.startAngle += 225;
-    //                     lastTrack.endAngle += 225;
-    //                     lastTrack.direction = "south";
-    //                     console.log(this.state.railroadMap)
+    //                 if (lastTrack.direction === "south-east") {
+    //
     //                 }
     //                 break;
     //             case "straight":
-    //
     //                 lastTrack.grader = lastTrack.grader + 45;
     //                 this.rotateStraightTrack(lastTrack);
     //         }
@@ -201,9 +171,28 @@ export default class Drawing extends Component {
     //         alert(e);
     //     }
     // }
+    rotateTrack = () => {
+        const {railroadMap} = this.state;
+        const lastTrack = railroadMap[lengthOfRailMap(railroadMap)];
+        
+        try {
+            switch (lastTrack.trackType) {
+                case "curve":
+                    if (lastTrack.direction === "south-east") {
+
+                    }
+
+                    break;
+                case "straight":
+                    lastTrack.grader = lastTrack.grader + 45;
+                    this.rotateStraightTrack(lastTrack);
+            }
+        } catch (e) {
+            alert(e);
+        }
+    }
 
     rotateStraightTrack = (track) => {
-
         const centerX = (track.x2 - track.x1) / 2 + track.x1;
         const centerY = (track.y2 - track.y1) / 2 + track.y1;
         const radius = 10;
@@ -216,18 +205,19 @@ export default class Drawing extends Component {
             direction: track.direction = compass[rotateCount]
         })
         rotateCount === 7 ? rotateCount = 0 : rotateCount++;
-        console.log(track.direction)
     };
 
     canvas = (s) => {
 
         s.setup = () => {
+            // 1. Initiate one railroad object to railroad map to have an fix point in the canvas
             const {railroadMap, trackObject} = this.state;
             this.setState({railroadMap: [...railroadMap, trackObject]})
 
-            // 1. Create Canvas
+            // 2. Create Canvas
             s.createCanvas(canvasWidth, canvasHeight);
-            // 2. Draw Settings
+
+            // 3. Draw Settings
             s.smooth();
             s.background(111);
             s.strokeWeight(4);
@@ -235,15 +225,14 @@ export default class Drawing extends Component {
         }
 
         s.draw = () => {
-            // 1. Draw railroad map in the canvas
+            // 1. Draw railroad map on the canvas
             this.drawRailroadMap(s);
         }
     }
 
     componentDidMount() {
         try {
-            let myP5 = new P5(this.canvas, document.getElementById('p5sketch'))
-            console.log(myP5)
+            this.myP5 = new P5(this.canvas, this.myRef.current)
         } catch (e) {
             console.log(e)
         }
@@ -253,12 +242,12 @@ export default class Drawing extends Component {
         console.log(this.state.railroadMap)
         return (
             <div>
-                <CanvasGrid id="p5sketch"/>
+                <CanvasGrid ref={this.myRef}/>
                 <ButtonGrid>
-                    <button data-testid='add-straight' onClick={this.addStraight}>ADD TRACK</button>
-                    <button data-testid='add-curve' onClick={this.addCurve}>ADD CURVE</button>
-                    <button data-testid='rotate-track' onClick={this.rotateTrack}>ROTATE</button>
-                    <button data-testid='delete-track' onClick={this.deleteLastTrack}>DELETE</button>
+                    <button data-testid='add-straight' className="btn" onClick={this.addStraight}>ADD TRACK</button>
+                    <button data-testid='add-curve' className="btn" onClick={this.addCurve}>ADD CURVE</button>
+                    <button data-testid='rotate-track' className="btn" onClick={this.rotateTrack}>ROTATE</button>
+                    <button data-testid='delete-track' className="btn" onClick={this.deleteLastTrack}>DELETE</button>
                 </ButtonGrid>
             </div>
         )

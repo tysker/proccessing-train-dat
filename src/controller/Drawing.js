@@ -27,6 +27,11 @@ export default class Drawing extends Component {
                     endAngle: 0,
                     trackType: "",
                     direction: "east",
+                    originalDirection: "east",
+                    OCX: 0,
+                    OCY:0,
+                    OSA:0,
+                    OEA:0,
                     grader: 0,
                     clockwise: true
                 },
@@ -221,62 +226,144 @@ export default class Drawing extends Component {
     }
 
     rotateCurveTrack = (lastTrack) => {
-        switch (lastTrack.direction) {
+
+        console.log(lastTrack.originalDirection);
+        switch (lastTrack.originalDirection) {
             case "east":
-                lastTrack.curveX = xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle);
-                lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
-                lastTrack.startAngle -= 225;
-                lastTrack.endAngle -= 225;
-                lastTrack.direction = "south-east";
+                if(lastTrack.clockwise === true){
+                    lastTrack.curveX = xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle);
+                    lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
+                    lastTrack.startAngle -= 225;
+                    lastTrack.endAngle -= 225;
+                    lastTrack.direction = "south-east";
+                    lastTrack.clockwise = false;
+                }else if (lastTrack.clockwise === false){
+                    lastTrack.curveX = lastTrack.OCX;
+                    lastTrack.curveY = lastTrack.OCY;
+                    lastTrack.startAngle += 225;
+                    lastTrack.endAngle += 225;
+                    lastTrack.direction = "north-east";
+                    lastTrack.clockwise = true;
+                }
                 break;
             case "south-east":
-                lastTrack.curveX = xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle);
-                lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
-                lastTrack.startAngle -= 225;
-                lastTrack.endAngle -= 225;
-                lastTrack.direction = "south";
+                if(lastTrack.clockwise === true){
+                    lastTrack.curveX = xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle);
+                    lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
+                    lastTrack.startAngle -= 225;
+                    lastTrack.endAngle -= 225;
+                    lastTrack.direction = "south";
+                    lastTrack.clockwise = false;
+                }else if (lastTrack.clockwise === false){
+                    lastTrack.curveX = lastTrack.OCX;
+                    lastTrack.curveY = lastTrack.OCY;
+                    lastTrack.startAngle += 225;
+                    lastTrack.endAngle += 225;
+                    lastTrack.direction = "east";
+                    lastTrack.clockwise = true;
+                }
                 break;
             case "south":
-                lastTrack.curveX = xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle);
-                lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
-                lastTrack.startAngle -= 225;
-                lastTrack.endAngle -= 225;
-                lastTrack.direction = "south-west";
+                if(lastTrack.clockwise === true){
+                    lastTrack.curveX = xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle);
+                    lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
+                    lastTrack.startAngle -= 225;
+                    lastTrack.endAngle -= 225;
+                    lastTrack.direction = "south-west";
+                    lastTrack.clockwise = false;
+                }else if (lastTrack.clockwise === false){
+                    lastTrack.curveX = lastTrack.OCX;
+                    lastTrack.curveY = lastTrack.OCY;
+                    lastTrack.startAngle += 225;
+                    lastTrack.endAngle += 225;
+                    lastTrack.direction = "south-east";
+                    lastTrack.clockwise = true;
+                }
                 break;
             case "south-west":
-                lastTrack.curveX = xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle);
-                lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
-                lastTrack.startAngle -= 225;
-                lastTrack.endAngle -= 225;
-                lastTrack.direction = "west";
+                if(lastTrack.clockwise === true){
+                    lastTrack.curveX = xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle);
+                    lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
+                    lastTrack.startAngle -= 225;
+                    lastTrack.endAngle -= 225;
+                    lastTrack.direction = "west";
+                    lastTrack.clockwise = false;
+                }else if (lastTrack.clockwise === false){
+                    lastTrack.curveX = lastTrack.OCX;
+                    lastTrack.curveY = lastTrack.OCY;
+                    lastTrack.startAngle += 225;
+                    lastTrack.endAngle += 225;
+                    lastTrack.direction = "south";
+                    lastTrack.clockwise = true;
+                }
                 break;
             case "west":
-                lastTrack.curveX = xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle);
-                lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
-                lastTrack.startAngle -= 225;
-                lastTrack.endAngle -= 225;
-                lastTrack.direction = "north-west";
+                if(lastTrack.clockwise === true){
+                    lastTrack.curveX = xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle);
+                    lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
+                    lastTrack.startAngle -= 225;
+                    lastTrack.endAngle -= 225;
+                    lastTrack.direction = "north-west";
+                    lastTrack.clockwise = false;
+                }else if (lastTrack.clockwise === false){
+                    lastTrack.curveX = lastTrack.OCX;
+                    lastTrack.curveY = lastTrack.OCY;
+                    lastTrack.startAngle += 225;
+                    lastTrack.endAngle += 225;
+                    lastTrack.direction = "south-west";
+                    lastTrack.clockwise = true;
+                }
                 break;
             case "north-west":
-                lastTrack.curveX = xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle);
-                lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
-                lastTrack.startAngle -= 225;
-                lastTrack.endAngle -= 225;
-                lastTrack.direction = "north";
+                if(lastTrack.clockwise === true){
+                    lastTrack.curveX = xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle);
+                    lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
+                    lastTrack.startAngle -= 225;
+                    lastTrack.endAngle -= 225;
+                    lastTrack.direction = "north";
+                    lastTrack.clockwise = false;
+                }else if (lastTrack.clockwise === false){
+                    lastTrack.curveX = lastTrack.OCX;
+                    lastTrack.curveY = lastTrack.OCY;
+                    lastTrack.startAngle += 225;
+                    lastTrack.endAngle += 225;
+                    lastTrack.direction = "west";
+                    lastTrack.clockwise = true;
+                }
                 break;
             case "north":
-                lastTrack.curveX = xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle);
-                lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
-                lastTrack.startAngle -= 225;
-                lastTrack.endAngle -= 225;
-                lastTrack.direction = "north-east";
+                if(lastTrack.clockwise === true){
+                    lastTrack.curveX = xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle);
+                    lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
+                    lastTrack.startAngle -= 225;
+                    lastTrack.endAngle -= 225;
+                    lastTrack.direction = "north-east";
+                    lastTrack.clockwise = false;
+                }else if (lastTrack.clockwise === false){
+                    lastTrack.curveX = lastTrack.OCX;
+                    lastTrack.curveY = lastTrack.OCY;
+                    lastTrack.startAngle += 225;
+                    lastTrack.endAngle += 225;
+                    lastTrack.direction = "north-west";
+                    lastTrack.clockwise = true;
+                }
                 break;
             case "north-east":
-                lastTrack.curveX = xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle);
-                lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
-                lastTrack.startAngle -= 225;
-                lastTrack.endAngle -= 225;
-                lastTrack.direction = "east";
+                if(lastTrack.clockwise === true){
+                    lastTrack.curveX = xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle);
+                    lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
+                    lastTrack.startAngle -= 225;
+                    lastTrack.endAngle -= 225;
+                    lastTrack.direction = "east";
+                    lastTrack.clockwise = false;
+                }else if (lastTrack.clockwise === false){
+                    lastTrack.curveX = lastTrack.OCX;
+                    lastTrack.curveY = lastTrack.OCY;
+                    lastTrack.startAngle += 225;
+                    lastTrack.endAngle += 225;
+                    lastTrack.direction = "north";
+                    lastTrack.clockwise = true;
+                }
                 break;
         }
     }

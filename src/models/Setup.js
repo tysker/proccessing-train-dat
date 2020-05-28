@@ -1,4 +1,4 @@
-// Returns the length of the railroad map -1
+ // Returns the length of the railroad map -1
 export const lengthOfRailMap = (rm) => rm.length - 1;
 // Calculates x and y coordinates for the last pixel of each curve section
 export const xPointCurve = (cx, r, angle) => cx + r * Math.cos(angle * Math.PI / 180);

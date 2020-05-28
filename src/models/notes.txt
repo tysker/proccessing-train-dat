@@ -141,3 +141,15 @@
                 grid-row-gap: 1rem;
                 justify-items: center;
             `;
+
+                                console.log("Hallo from rotate")
+                                const midx = lastTrack.curveX;
+                                const midy = lastTrack.curveY;
+                                const cx = xPointCurve(lastTrack.curveX, 20, lastTrack.startAngle);
+                                const cy = xPointCurve(lastTrack.curveY, 20, lastTrack.startAngle);
+                                lastTrack.curveX = xPointCurve(cx, 20, 315);
+                                lastTrack.curveY = xPointCurve(cy, 20, 315);
+                                lastTrack.startAngle = 45;
+                                lastTrack.endAngle = 90;
+                                lastTrack.direction = "north";
+                                console.log(this.state.railroadMap)

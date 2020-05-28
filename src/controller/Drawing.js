@@ -5,8 +5,6 @@ import {lengthOfRailMap, xPointCurve, yPointCurve, compass} from '../models/Setu
 import {canvasWidth, canvasHeight, curveWidth, curveHeight, CanvasGrid, ButtonGrid} from '../models/Constants'
 import {curveClockWise, curveAntiClockWise} from '../models/Curve';
 
-let rotateCount = 0;
-let isToggle = false;
 
 export default class Drawing extends Component {
     constructor(props) {
@@ -123,7 +121,14 @@ export default class Drawing extends Component {
     addCurve = () => {
         const {railroadMap, trackObject} = this.state;
         let obj = Object.create(trackObject);
-        obj = curveClockWise(railroadMap, trackObject, obj);
+        const lastTrack = railroadMap[lengthOfRailMap(railroadMap)];
+
+        if(lastTrack.clockwise){
+            obj = curveClockWise(railroadMap, trackObject, obj);
+        }else{
+            obj = curveAntiClockWise(railroadMap, trackObject, obj);
+        }
+
         this.setState({railroadMap: [...railroadMap, obj]})
     }
 
@@ -159,55 +164,14 @@ export default class Drawing extends Component {
         })
     };
 
-
-    // rotateTrack = (s) => {
-    //     console.log("HALLO")
-    //     const {railroadMap} = this.state;
-    //     const lastTrack = railroadMap[lengthOfRailMap(railroadMap)];
-    //     try {
-    //         switch (lastTrack.trackType) {
-    //             case "curve":
-    //                 console.log(isToggle)
-    //                 lastTrack.curveX = xPointCurve(lastTrack.x2, 20, lastTrack.startAngle);
-    //                 lastTrack.curveY = yPointCurve(lastTrack.y2, 20, lastTrack.startAngle);
-    //                 !isToggle ? lastTrack.startAngle -= 225 : lastTrack.startAngle += 225;
-    //                 !isToggle ? lastTrack.endAngle -= 225 : lastTrack.endAngle += 225;
-
-    //                 isToggle = !isToggle;
-    //                 console.log(isToggle)
-    //                 lastTrack.direction = "south-east";
-    //                 console.log(this.state.railroadMap)
-    //                 break;
-    //             case "straight":
-    //                 lastTrack.grader = lastTrack.grader === 360 ? 45 : lastTrack.grader + 45;
-    //                 this.rotateStraightTrack(lastTrack);
-    //         }
-    //     } catch (e) {
-    //         alert(e);
-    //     }
-    // }
-
-    rotateTrack = (s) => {
+    rotateTrack = () => {
         const {railroadMap} = this.state;
         const lastTrack = railroadMap[lengthOfRailMap(railroadMap)];
         try {
             switch (lastTrack.trackType) {
                 case "curve":
-                    // if (lastTrack.direction === "south") {
-                    //     lastTrack.curveX = xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle);
-                    //     lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
-                    //     lastTrack.startAngle -= 225;
-                    //     lastTrack.endAngle -= 225;
-                    //     lastTrack.direction = "north";
-                    //     console.log(this.state.railroadMap)
-                    // } else if (lastTrack.direction === "north") {
-                    //     lastTrack.curveX = xPointCurve(lastTrack.curveX, 40, lastTrack.endAngle);
-                    //     lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.endAngle);
-                    //     lastTrack.startAngle += 225;
-                    //     lastTrack.endAngle += 225;
-                    //     lastTrack.direction = "south";
-                    //     console.log(this.state.railroadMap)
-                    // }
+                    lastTrack.clockwise = !lastTrack.clockwise;
+                    console.log(lastTrack.clockwise)
                     this.rotateCurveTrack(lastTrack);
                     break;
                 case "straight":
@@ -223,18 +187,23 @@ export default class Drawing extends Component {
     rotateCurveTrack = (lastTrack) => {
         switch (lastTrack.direction) {
             case "east":
-                lastTrack.curveX = xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle);
-                lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
-                lastTrack.startAngle -= 225;
-                lastTrack.endAngle -= 225;
-                lastTrack.direction = "south-east";
+                lastTrack.curveX = xPointCurve(lastTrack.curveX, 40, lastTrack.endAngle);
+                lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.endAngle);
+                lastTrack.startAngle = lastTrack.clockwise ? lastTrack.startAngle -= 225 : lastTrack.startAngle += 225;
+                lastTrack.endAngle = lastTrack.clockwise ? lastTrack.endAngle -= 225 : lastTrack.endAngle += 225;
+                // lastTrack.startAngle -= 225;
+                // lastTrack.endAngle -= 225;
+                lastTrack.direction = lastTrack.clockwise ? "south-east" : "north-east";
                 break;
             case "south-east":
                 lastTrack.curveX = xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle);
                 lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
-                lastTrack.startAngle -= 225;
-                lastTrack.endAngle -= 225;
-                lastTrack.direction = "south";
+                lastTrack.startAngle = lastTrack.clockwise ? lastTrack.startAngle += 225 : lastTrack.startAngle -= 225;
+                lastTrack.endAngle = lastTrack.clockwise ? lastTrack.endAngle += 225 : lastTrack.endAngle -= 225;
+                lastTrack.direction = lastTrack.clockwise ? "north-east" : "north-east";
+                // lastTrack.startAngle -= 225;
+                // lastTrack.endAngle -= 225;
+                //lastTrack.direction = "south";
                 break;
             case "south":
                 lastTrack.curveX = xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle);
@@ -272,11 +241,11 @@ export default class Drawing extends Component {
                 lastTrack.direction = "north-east";
                 break;
             case "north-east":
-                lastTrack.curveX = xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle);
-                lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
-                lastTrack.startAngle -= 225;
-                lastTrack.endAngle -= 225;
-                lastTrack.direction = "east";
+                lastTrack.curveX = xPointCurve(lastTrack.curveX, 40, lastTrack.endAngle);
+                lastTrack.curveY = yPointCurve(lastTrack.curveY, 40, lastTrack.endAngle);
+                lastTrack.startAngle = lastTrack.clockwise ? lastTrack.startAngle += 225 : lastTrack.startAngle -= 225;
+                lastTrack.endAngle = lastTrack.clockwise ? lastTrack.endAngle += 225 : lastTrack.endAngle -= 225;
+                lastTrack.direction = lastTrack.clockwise ? "north-east" : "south-east";
                 break;
         }
     }
@@ -290,31 +259,31 @@ export default class Drawing extends Component {
         let rotateCount = 0;
         switch (track.grader) {
             case 0:
-                rotateCount = 0;
-                break;
-            case 45:
-                rotateCount = 1;
-                break;
-            case 90:
-                rotateCount = 2;
-                break;
-            case 135:
-                rotateCount = 3;
-                break;
-            case 180:
-                rotateCount = 4;
-                break;
-            case 225:
-                rotateCount = 5;
-                break;
-            case 270:
-                rotateCount = 6;
-                break;
-            case 315:
                 rotateCount = 7;
                 break;
-            case 360:
+            case 45:
                 rotateCount = 0;
+                break;
+            case 90:
+                rotateCount = 1;
+                break;
+            case 135:
+                rotateCount = 2;
+                break;
+            case 180:
+                rotateCount = 3;
+                break;
+            case 225:
+                rotateCount = 4;
+                break;
+            case 270:
+                rotateCount = 5;
+                break;
+            case 315:
+                rotateCount = 6;
+                break;
+            case 360:
+                rotateCount = 7;
                 break;
 
         }

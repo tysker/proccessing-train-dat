@@ -1,10 +1,13 @@
 import {lengthOfRailMap, xPointCurve, yPointCurve} from "./Setup";
 
+
 export const curveClockWise = (railroadMap, trackObject, obj) => {
     const lastTrack = railroadMap[lengthOfRailMap(railroadMap)];
     obj.id = lastTrack.id + 1;
     obj.trackType = "curve";
     obj.direction = "";
+    obj.clockwise = true;
+
 
     try {
         if (railroadMap.length > 0) {
@@ -110,27 +113,28 @@ export const curveAntiClockWise = (railroadMap, trackObject, obj) => {
     obj.id = lastTrack.id + 1;
     obj.trackType = "curve";
     obj.direction = "";
+    obj.clockwise = false;
 
     try {
         if (railroadMap.length > 0) {
             switch (lastTrack.direction) {
                 case "east":
-                    obj.startAngle = 270;
-                    obj.endAngle = 315;
+                    obj.startAngle = 0;
+                    obj.endAngle = 45;
                     obj.curveX = xPointCurve(lastTrack.x2, 20, 90);
                     obj.curveY = yPointCurve(lastTrack.y2, 20, 90);
-                    obj.direction = "south-east";
+                    obj.direction = "north-east";
                     obj.grader = 45;
                     obj.x2 = xPointCurve(obj.curveX, 20, obj.endAngle)
                     obj.y2 = yPointCurve(obj.curveY, 20, obj.endAngle)
                     console.log(obj.direction)
                     return obj;
                 case "south-east":
-                    obj.startAngle = 315;
-                    obj.endAngle = 0;
+                    obj.startAngle = 45;
+                    obj.endAngle = 90;
                     obj.curveX = xPointCurve(lastTrack.x2, 20, 135);
                     obj.curveY = yPointCurve(lastTrack.y2, 20, 135);
-                    obj.direction = "south";
+                    obj.direction = "east";
                     obj.grader = 90;
                     obj.x2 = xPointCurve(obj.curveX, 20, obj.endAngle)
                     obj.y2 = yPointCurve(obj.curveY, 20, obj.endAngle)

@@ -1,5 +1,5 @@
 import {cleanup} from "@testing-library/react";
-import {lengthOfRailMap, xPointCurve, yPointCurve} from "../models/Setup";
+import {lengthOfRailMap, xPointCurve, yPointCurve} from "../models/base";
 import React from "react";
 
 afterEach(cleanup);

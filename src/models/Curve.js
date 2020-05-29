@@ -1,4 +1,4 @@
-import {lengthOfRailMap, xPointCurve, yPointCurve} from "./Setup";
+import {lengthOfRailMap, xPointCurve, yPointCurve} from "./base";
 
 export const curveClockWise = (railroadMap, trackObject, obj) => {
     const lastTrack = railroadMap[lengthOfRailMap(railroadMap)];

@@ -15,11 +15,12 @@ test('<Drawing Buttons/>', () => {
     const addDeleteButton = getByTestId('delete-track');
     const addRotateButton = getByTestId('rotate-track');
 
+    // Asserts track-button is a button
     expect(addTrackButton.tagName).toBe('BUTTON');
     expect(addDeleteButton.tagName).toBe('BUTTON');
     expect(addCurveButton.tagName).toBe('BUTTON');
     expect(addRotateButton.tagName).toBe('BUTTON');
-
+    // Asserts track-buttons text content
     expect(addTrackButton.textContent).toBe('ADD TRACK');
     expect(addCurveButton.textContent).toBe('ADD CURVE');
     expect(addDeleteButton.textContent).toBe('DELETE');

@@ -1,12 +1,12 @@
 import React from 'react';
 import {render, cleanup} from '@testing-library/react';
-import Drawing from "../controller/Drawing";
+import UserController from "../controller/UserController";
 
 
 afterEach(cleanup);
 
-test('<Drawing Buttons/>', () => {
-    const {getByTestId} = render(<Drawing/>);
+test('<GraphicController-Buttons/>', () => {
+    const {getByTestId} = render(<UserController/>);
     console.error = jest.fn();
     console.log = jest.fn();
 
@@ -25,7 +25,6 @@ test('<Drawing Buttons/>', () => {
     expect(addCurveButton.textContent).toBe('ADD CURVE');
     expect(addDeleteButton.textContent).toBe('DELETE');
     expect(addRotateButton.textContent).toBe('ROTATE');
-
 });
 
 

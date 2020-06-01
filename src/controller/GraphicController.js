@@ -1,12 +1,13 @@
 import React, {Component} from 'react';
-import P5 from 'p5';
 import '../style/Drawing.css';
-import * as base from '../models/base';
+import P5 from 'p5';
+import UserController from "./UserController";
+import * as b from '../config/base';
 import {curveClockWise, curveAntiClockWise} from '../models/Curve';
 import styled from "styled-components";
 
 
-export default class Drawing extends Component {
+export default class GraphicController extends Component {
     constructor(props) {
         super(props)
         this.myRef = React.createRef();
@@ -15,6 +16,7 @@ export default class Drawing extends Component {
             trackObject:
                 {
                     id: 0,
+                    clockwise: true,
                     x1: 300,
                     y1: 300,
                     x2: 320,
@@ -27,18 +29,29 @@ export default class Drawing extends Component {
                     direction: "east",
                     originalDirection: "east",
                     OCX: 0,
-                    OCY:0,
-                    OX2:0,
-                    OY2:0,
+                    OCY: 0,
+                    OX2: 0,
+                    OY2: 0,
                     grader: 0,
-                    clockwise: true
                 },
         };
-    }
+    };
+
+    componentDidMount() {
+        try {
+            // 1. Initiate one railroad object to railroad map to have an fix point in the canvas
+            const {railroadMap, trackObject} = this.state;
+            this.setState({railroadMap: [...railroadMap, trackObject]});
+            // 2. p5 reference to create a new P5 object
+            this.myP5 = new P5(this.canvas, this.myRef.current)
+        } catch (e) {
+            console.log(e)
+        }
+    };
 
     addStraight = () => {
         const {railroadMap, trackObject} = this.state;
-        const lastTrack = railroadMap[base.lengthOfRailMap(railroadMap)];
+        const lastTrack = railroadMap[b.lengthOfRailMap(railroadMap)];
         let obj = Object.create(trackObject);
         let tempObj = this.straightTrackDirection(obj, lastTrack);
         try {
@@ -66,7 +79,6 @@ export default class Drawing extends Component {
         }
     }
 
-
     straightTrackDirection = (obj, lastTrack) => {
         const railLength = 20;
         const radius = 20;
@@ -83,8 +95,8 @@ export default class Drawing extends Component {
                 obj.direction = "east";
                 break;
             case 45:
-                obj.x2 = base.xPointCurve(centerX, radius, 45);
-                obj.y2 = base.yPointCurve(centerY, radius, 45);
+                obj.x2 = Math.round(b.xPointCurve(centerX, radius, 45));
+                obj.y2 = Math.round(b.yPointCurve(centerY, radius, 45));
                 obj.direction = "south-east";
                 break;
             case 90:
@@ -92,8 +104,8 @@ export default class Drawing extends Component {
                 obj.direction = "south";
                 break;
             case 135:
-                obj.x2 = base.xPointCurve(centerX, radius, 135);
-                obj.y2 = base.yPointCurve(centerY, radius, 135);
+                obj.x2 = Math.round(b.xPointCurve(centerX, radius, 135));
+                obj.y2 = Math.round(b.yPointCurve(centerY, radius, 135));
                 obj.direction = "south-west";
                 break;
             case 180:
@@ -101,8 +113,8 @@ export default class Drawing extends Component {
                 obj.direction = "west";
                 break;
             case 225:
-                obj.x2 = base.xPointCurve(centerX, radius, 225);base.
-                obj.y2 = base.yPointCurve(centerY, radius, 225);
+                obj.x2 = Math.round(b.xPointCurve(centerX, radius, 225));
+                obj.y2 = Math.round(b.yPointCurve(centerY, radius, 225));
                 obj.direction = "north-west";
                 break;
             case 270:
@@ -110,8 +122,8 @@ export default class Drawing extends Component {
                 obj.direction = "north";
                 break;
             case 315:
-                obj.x2 = base.xPointCurve(centerX, radius, 315);
-                obj.y2 = base.yPointCurve(centerY, radius, 315);
+                obj.x2 = Math.round(b.xPointCurve(centerX, radius, 315));
+                obj.y2 = Math.round(b.yPointCurve(centerY, radius, 315));
                 obj.direction = "north-east";
                 break;
             case 360:
@@ -125,11 +137,11 @@ export default class Drawing extends Component {
 
     addCurve = () => {
         const {railroadMap, trackObject} = this.state;
-        const lastTrack = railroadMap[base.lengthOfRailMap(railroadMap)];
+        const lastTrack = railroadMap[b.lengthOfRailMap(railroadMap)];
         let obj = Object.create(trackObject);
-        if(lastTrack.clockwise){
+        if (lastTrack.clockwise) {
             obj = curveClockWise(railroadMap, trackObject, obj);
-        }else{
+        } else {
             obj = curveAntiClockWise(railroadMap, trackObject, obj);
         }
 
@@ -139,7 +151,7 @@ export default class Drawing extends Component {
 
     deleteLastTrack = () => {
         const {railroadMap} = this.state;
-        const lastTrack = railroadMap[base.lengthOfRailMap(railroadMap)];
+        const lastTrack = railroadMap[b.lengthOfRailMap(railroadMap)];
 
         try {
             if (railroadMap.length > 1) {
@@ -162,7 +174,7 @@ export default class Drawing extends Component {
                     s.line(t.x1, t.y1, t.x2, t.y2)
                     break;
                 case "curve":
-                    s.arc(t.curveX, t.curveY, base.curveWidth, base.curveHeight, s.radians(t.startAngle), (3.14 / 180) * t.endAngle);
+                    s.arc(t.curveX, t.curveY, b.curveWidth, b.curveHeight, s.radians(t.startAngle), (s.PI / 180) * t.endAngle);
                     break;
             }
         })
@@ -171,7 +183,7 @@ export default class Drawing extends Component {
 
     rotateTrack = (s) => {
         const {railroadMap} = this.state;
-        const lastTrack = railroadMap[base.lengthOfRailMap(railroadMap)];
+        const lastTrack = railroadMap[b.lengthOfRailMap(railroadMap)];
         try {
             switch (lastTrack.trackType) {
                 case "curve":
@@ -192,17 +204,17 @@ export default class Drawing extends Component {
         console.log(lastTrack.originalDirection);
         switch (lastTrack.originalDirection) {
             case "east":
-                if(lastTrack.clockwise === true){
-                    lastTrack.curveX = base.xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle);
-                    lastTrack.curveY = base.yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
+                if (lastTrack.clockwise === true) {
+                    lastTrack.curveX = Math.round(b.xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle));
+                    lastTrack.curveY = Math.round(b.yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle));
                     lastTrack.startAngle -= 225;
                     lastTrack.endAngle -= 225;
-                    lastTrack.x2 = base.xPointCurve(lastTrack.curveX, 20, lastTrack.startAngle);
-                    lastTrack.y2 = base.yPointCurve(lastTrack.curveY, 20, lastTrack.startAngle);
+                    lastTrack.x2 = Math.round(b.xPointCurve(lastTrack.curveX, 20, lastTrack.startAngle));
+                    lastTrack.y2 = Math.round(b.yPointCurve(lastTrack.curveY, 20, lastTrack.startAngle));
                     lastTrack.direction = "north-east";
                     lastTrack.clockwise = false;
                     lastTrack.grader = 315;
-                }else if (lastTrack.clockwise === false){
+                } else if (lastTrack.clockwise === false) {
                     lastTrack.curveX = lastTrack.OCX;
                     lastTrack.curveY = lastTrack.OCY;
                     lastTrack.startAngle += 225;
@@ -215,17 +227,17 @@ export default class Drawing extends Component {
                 }
                 break;
             case "south-east":
-                if(lastTrack.clockwise === true){
-                    lastTrack.curveX = base.xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle);
-                    lastTrack.curveY = base.yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
+                if (lastTrack.clockwise === true) {
+                    lastTrack.curveX = Math.round(b.xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle));
+                    lastTrack.curveY = Math.round(b.yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle));
                     lastTrack.startAngle -= 225;
                     lastTrack.endAngle -= 225;
-                    lastTrack.x2 = base.xPointCurve(lastTrack.curveX, 20, lastTrack.startAngle);
-                    lastTrack.y2 = base.yPointCurve(lastTrack.curveY, 20, lastTrack.startAngle);
+                    lastTrack.x2 = Math.round(b.xPointCurve(lastTrack.curveX, 20, lastTrack.startAngle));
+                    lastTrack.y2 = Math.round(b.yPointCurve(lastTrack.curveY, 20, lastTrack.startAngle));
                     lastTrack.direction = "east";
                     lastTrack.grader = 0;
                     lastTrack.clockwise = false;
-                }else if (lastTrack.clockwise === false){
+                } else if (lastTrack.clockwise === false) {
                     lastTrack.curveX = lastTrack.OCX;
                     lastTrack.curveY = lastTrack.OCY;
                     lastTrack.startAngle += 225;
@@ -238,17 +250,17 @@ export default class Drawing extends Component {
                 }
                 break;
             case "south":
-                if(lastTrack.clockwise === true){
-                    lastTrack.curveX = base.xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle);
-                    lastTrack.curveY = base.yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
+                if (lastTrack.clockwise === true) {
+                    lastTrack.curveX = Math.round(b.xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle));
+                    lastTrack.curveY = Math.round(b.yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle));
                     lastTrack.startAngle -= 225;
                     lastTrack.endAngle -= 225;
-                    lastTrack.x2 = base.xPointCurve(lastTrack.curveX, 20, lastTrack.startAngle);
-                    lastTrack.y2 = base.yPointCurve(lastTrack.curveY, 20, lastTrack.startAngle);
+                    lastTrack.x2 = Math.round(b.xPointCurve(lastTrack.curveX, 20, lastTrack.startAngle));
+                    lastTrack.y2 = Math.round(b.yPointCurve(lastTrack.curveY, 20, lastTrack.startAngle));
                     lastTrack.direction = "south-east";
                     lastTrack.clockwise = false;
                     lastTrack.grader = 45;
-                }else if (lastTrack.clockwise === false){
+                } else if (lastTrack.clockwise === false) {
                     lastTrack.curveX = lastTrack.OCX;
                     lastTrack.curveY = lastTrack.OCY;
                     lastTrack.startAngle += 225;
@@ -261,17 +273,17 @@ export default class Drawing extends Component {
                 }
                 break;
             case "south-west":
-                if(lastTrack.clockwise === true){
-                    lastTrack.curveX = base.xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle);
-                    lastTrack.curveY = base.yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
+                if (lastTrack.clockwise === true) {
+                    lastTrack.curveX = Math.round(b.xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle));
+                    lastTrack.curveY = Math.round(b.yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle));
                     lastTrack.startAngle -= 225;
                     lastTrack.endAngle -= 225;
-                    lastTrack.x2 = base.xPointCurve(lastTrack.curveX, 20, lastTrack.startAngle);
-                    lastTrack.y2 = base.yPointCurve(lastTrack.curveY, 20, lastTrack.startAngle);
+                    lastTrack.x2 = Math.round(b.xPointCurve(lastTrack.curveX, 20, lastTrack.startAngle));
+                    lastTrack.y2 = Math.round(b.yPointCurve(lastTrack.curveY, 20, lastTrack.startAngle));
                     lastTrack.direction = "south";
                     lastTrack.clockwise = false;
                     lastTrack.grader = 90;
-                }else if (lastTrack.clockwise === false){
+                } else if (lastTrack.clockwise === false) {
                     lastTrack.curveX = lastTrack.OCX;
                     lastTrack.curveY = lastTrack.OCY;
                     lastTrack.startAngle += 225;
@@ -284,17 +296,17 @@ export default class Drawing extends Component {
                 }
                 break;
             case "west":
-                if(lastTrack.clockwise === true){
-                    lastTrack.curveX = base.xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle);
-                    lastTrack.curveY = base.yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
+                if (lastTrack.clockwise === true) {
+                    lastTrack.curveX = Math.round(b.xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle));
+                    lastTrack.curveY = Math.round(b.yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle));
                     lastTrack.startAngle -= 225;
                     lastTrack.endAngle -= 225;
-                    lastTrack.x2 = base.xPointCurve(lastTrack.curveX, 20, lastTrack.startAngle);
-                    lastTrack.y2 = base.yPointCurve(lastTrack.curveY, 20, lastTrack.startAngle);
+                    lastTrack.x2 = Math.round(b.xPointCurve(lastTrack.curveX, 20, lastTrack.startAngle));
+                    lastTrack.y2 = Math.round(b.yPointCurve(lastTrack.curveY, 20, lastTrack.startAngle));
                     lastTrack.direction = "south-west";
                     lastTrack.clockwise = false;
                     lastTrack.grader = 135;
-                }else if (lastTrack.clockwise === false){
+                } else if (lastTrack.clockwise === false) {
                     lastTrack.curveX = lastTrack.OCX;
                     lastTrack.curveY = lastTrack.OCY;
                     lastTrack.startAngle += 225;
@@ -307,17 +319,17 @@ export default class Drawing extends Component {
                 }
                 break;
             case "north-west":
-                if(lastTrack.clockwise === true){
-                    lastTrack.curveX = base.xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle);
-                    lastTrack.curveY = base.yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
+                if (lastTrack.clockwise === true) {
+                    lastTrack.curveX = Math.round(b.xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle));
+                    lastTrack.curveY = Math.round(b.yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle));
                     lastTrack.startAngle -= 225;
                     lastTrack.endAngle -= 225;
-                    lastTrack.x2 = base.xPointCurve(lastTrack.curveX, 20, lastTrack.startAngle);
-                    lastTrack.y2 = base.yPointCurve(lastTrack.curveY, 20, lastTrack.startAngle);
+                    lastTrack.x2 = Math.round(b.xPointCurve(lastTrack.curveX, 20, lastTrack.startAngle));
+                    lastTrack.y2 = Math.round(b.yPointCurve(lastTrack.curveY, 20, lastTrack.startAngle));
                     lastTrack.direction = "west";
                     lastTrack.clockwise = false;
                     lastTrack.grader = 180;
-                }else if (lastTrack.clockwise === false){
+                } else if (lastTrack.clockwise === false) {
                     lastTrack.curveX = lastTrack.OCX;
                     lastTrack.curveY = lastTrack.OCY;
                     lastTrack.startAngle += 225;
@@ -325,22 +337,22 @@ export default class Drawing extends Component {
                     lastTrack.direction = "north";
                     lastTrack.clockwise = true;
                     lastTrack.grader = 270;
-                    lastTrack.x2 = lastTrack.OX2;base.
+                    lastTrack.x2 = lastTrack.OX2;
                     lastTrack.y2 = lastTrack.OY2;
                 }
                 break;
             case "north":
-                if(lastTrack.clockwise === true){
-                    lastTrack.curveX = base.xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle);
-                    lastTrack.curveY = base.yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
+                if (lastTrack.clockwise === true) {
+                    lastTrack.curveX = Math.round(b.xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle));
+                    lastTrack.curveY = Math.round(b.yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle));
                     lastTrack.startAngle -= 225;
                     lastTrack.endAngle -= 225;
-                    lastTrack.x2 = base.xPointCurve(lastTrack.curveX, 20, lastTrack.startAngle);
-                    lastTrack.y2 = base.yPointCurve(lastTrack.curveY, 20, lastTrack.startAngle);
+                    lastTrack.x2 = Math.round(b.xPointCurve(lastTrack.curveX, 20, lastTrack.startAngle));
+                    lastTrack.y2 = Math.round(b.yPointCurve(lastTrack.curveY, 20, lastTrack.startAngle));
                     lastTrack.direction = "north-west";
                     lastTrack.clockwise = false;
                     lastTrack.grader = 225;
-                }else if (lastTrack.clockwise === false){
+                } else if (lastTrack.clockwise === false) {
                     lastTrack.curveX = lastTrack.OCX;
                     lastTrack.curveY = lastTrack.OCY;
                     lastTrack.startAngle += 225;
@@ -353,17 +365,17 @@ export default class Drawing extends Component {
                 }
                 break;
             case "north-east":
-                if(lastTrack.clockwise === true){
-                    lastTrack.curveX = base.xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle);
-                    lastTrack.curveY = base.yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle);
+                if (lastTrack.clockwise === true) {
+                    lastTrack.curveX = Math.round(b.xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle));
+                    lastTrack.curveY = Math.round(b.yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle));
                     lastTrack.startAngle -= 225;
                     lastTrack.endAngle -= 225;
-                    lastTrack.x2 = base.xPointCurve(lastTrack.curveX, 20, lastTrack.startAngle);
-                    lastTrack.y2 = base.yPointCurve(lastTrack.curveY, 20, lastTrack.startAngle);
+                    lastTrack.x2 = Math.round(b.xPointCurve(lastTrack.curveX, 20, lastTrack.startAngle));
+                    lastTrack.y2 = Math.round(b.yPointCurve(lastTrack.curveY, 20, lastTrack.startAngle));
                     lastTrack.direction = "north";
                     lastTrack.clockwise = false;
                     lastTrack.grader = 270;
-                }else if (lastTrack.clockwise === false){
+                } else if (lastTrack.clockwise === false) {
                     lastTrack.curveX = lastTrack.OCX;
                     lastTrack.curveY = lastTrack.OCY;
                     lastTrack.startAngle += 225;
@@ -415,65 +427,45 @@ export default class Drawing extends Component {
         }
 
         this.setState({
-            x1: track.x1 = base.xPointCurve(centerX, radius, track.grader + 180),
-            y1: track.y1 = base.yPointCurve(centerY, radius, track.grader + 180),
-            x2: track.x2 = base.xPointCurve(centerX, radius, track.grader),
-            y2: track.y2 = base.yPointCurve(centerY, radius, track.grader),
-            direction: track.direction = base.compass[rotateCount]
+            x1: track.x1 = Math.round(b.xPointCurve(centerX, radius, track.grader + 180)),
+            y1: track.y1 = Math.round(b.yPointCurve(centerY, radius, track.grader + 180)),
+            x2: track.x2 = Math.round(b.xPointCurve(centerX, radius, track.grader)),
+            y2: track.y2 = Math.round(b.yPointCurve(centerY, radius, track.grader)),
+            direction: track.direction = b.compass[rotateCount]
         })
     };
 
     canvas = (s) => {
 
         s.setup = () => {
-            // 1. Initiate one railroad object to railroad map to have an fix point in the canvas
-            const {railroadMap, trackObject} = this.state;
-            this.setState({railroadMap: [...railroadMap, trackObject]})
 
-            // 2. Create Canvas
-            s.createCanvas(base.canvasWidth, base.canvasHeight);
+            // 1. Create Canvas
+            s.createCanvas(b.canvasWidth, b.canvasHeight);
 
-            // 3. Draw Settings
+            // 2. Draw Settings
             s.smooth();
             s.background(111);
             s.strokeWeight(4);
-            //s.noFill();
+            s.noFill();
         }
-
         s.draw = () => {
             // 1. Draw railroad map on the canvas
             this.drawRailroadMap(s);
         }
-    }
+    };
 
-    componentDidMount() {
-        try {
-            this.myP5 = new P5(this.canvas, this.myRef.current)
-        } catch (e) {
-            console.log(e)
-        }
-    }
 
     render() {
         console.log(this.state.railroadMap)
         return (
-            <
-                div>
-                < CanvasGrid
-                    ref={this.myRef}
-                />
-                <ButtonGrid>
-                    <button data-testid='add-straight' className="btn" onClick={this.addStraight}>ADD TRACK</button>
-                    <button data-testid='add-curve' className="btn" onClick={this.addCurve}>ADD CURVE</button>
-                    <button data-testid='rotate-track' className="btn" onClick={this.rotateTrack}>ROTATE</button>
-                    <button data-testid='delete-track' className="btn" onClick={this.deleteLastTrack}>DELETE</button>
-                </ButtonGrid>
+            <div>
+            <CanvasGrid ref={this.myRef}/>
+                <UserController addStraight={this.addStraight} addCurve={this.addCurve} rotateTrack={this.rotateTrack} deleteLastTrack={this.deleteLastTrack}/>
             </div>
         )
     }
-}
+};
 
-// Style
 const
     CanvasGrid = styled.div`
     display: grid;
@@ -482,11 +474,4 @@ const
     grid-row-gap: 1rem;
     justify-items: center;
 `;
-const
-    ButtonGrid = styled.div`
-    display: grid;
-    padding: 1rem;
-    grid-template-columns: repeat(4, 1fr);
-    grid-row-gap: 1rem;
-    justify-items: center;
-`;
+

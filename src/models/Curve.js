@@ -21,7 +21,7 @@ export const curve = (obj, lastTrack, startAngle, endAngle, angle, direction, gr
     console.log(obj.direction);
     return obj;
 }
-export const curveClockWise = (railroadMap, trackObject, obj) => {
+export const curveClockWise = (railroadMap,obj) => {
     const lastTrack = railroadMap[lengthOfRailMap(railroadMap)];
 
     try {
@@ -59,7 +59,7 @@ export const curveClockWise = (railroadMap, trackObject, obj) => {
     }
 }
 
-export const curveAntiClockWise = (railroadMap, trackObject, obj) => {
+export const curveAntiClockWise = (railroadMap, obj) => {
     const lastTrack = railroadMap[lengthOfRailMap(railroadMap)];
 
     try {

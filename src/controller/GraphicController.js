@@ -45,7 +45,6 @@ export default class GraphicController extends Component {
             this.setState((prev) => ({
                 railroadMap: [...railroadMap, trackObject]
             }))
-            console.log("componentDidMount")
             // 2. p5 reference to create a new P5 object
             this.myP5 = new P5(this.canvas, this.myRef.current)
         } catch (e) {
@@ -97,8 +96,8 @@ export default class GraphicController extends Component {
             obj.y2 = lastTrack.y2;
 
         }else if (lastTrack.clockwise === false){
-            obj.x1 = xPointCurve(lastTrack.curveX, 20, lastTrack.startAngle);
-            obj.y1 = xPointCurve(lastTrack.curveY, 20, lastTrack.startAngle);
+            obj.x1 = xPointCurve(lastTrack.curveX, 20, lastTrack.endAngle);
+            obj.y1 = xPointCurve(lastTrack.curveY, 20, lastTrack.endAngle);
 
         }
 
@@ -201,9 +200,9 @@ export default class GraphicController extends Component {
         const lastTrack = railroadMap[b.lengthOfRailMap(railroadMap)];
         let obj = Object.create(trackObject);
         if (lastTrack.clockwise) {
-            obj = curveClockWise(railroadMap, trackObject, obj);
+            obj = curveClockWise(railroadMap, obj);
         } else {
-            obj = curveAntiClockWise(railroadMap, trackObject, obj);
+            obj = curveAntiClockWise(railroadMap, obj);
         }
 
         this.setState((prev) => ({
@@ -229,21 +228,6 @@ export default class GraphicController extends Component {
             alert(e);
         }
     }
-
-    drawRailroadMap = (s) => {
-        const {railroadMap} = this.state;
-        s.background(111);
-        railroadMap.forEach(t => {
-            switch (t.trackType) {
-                case "straight":
-                    s.line(t.x1, t.y1, t.x2, t.y2)
-                    break;
-                case "curve":
-                    s.arc(t.curveX, t.curveY, b.curveWidth, b.curveHeight, s.radians(t.startAngle), s.radians(t.endAngle));
-                    break;
-            }
-        })
-    };
 
     rotateTrack = (s) => {
         const {railroadMap} = this.state;
@@ -315,7 +299,22 @@ export default class GraphicController extends Component {
         this.setState((prev) => ({
             railroadMap: resetArray
         }))
-    }
+    };
+
+    drawRailroadMap = (s) => {
+        const {railroadMap} = this.state;
+        s.background(111);
+        railroadMap.forEach(t => {
+            switch (t.trackType) {
+                case "straight":
+                    s.line(t.x1, t.y1, t.x2, t.y2)
+                    break;
+                case "curve":
+                    s.arc(t.curveX, t.curveY, b.curveWidth, b.curveHeight, s.radians(t.startAngle), s.radians(t.endAngle));
+                    break;
+            }
+        })
+    };
 
     canvas = (s) => {
         s.setup = () => {
@@ -325,16 +324,12 @@ export default class GraphicController extends Component {
             // 2. Draw Settings
             s.smooth();
             s.background(111);
-            s.strokeWeight(4);
+            s.strokeWeight(6);
             //s.noFill();
         }
         s.draw = () => {
             // 1. Draw railroad map on the canvas
             this.drawRailroadMap(s);
-            //s.arc(t.curveX, t.curveY, b.curveWidth, b.curveHeight, s.radians(t.startAngle), (s.PI / 180) * t.endAngle);
-            //s.arc(300,300,40,40,45,s.PI / 2)
-            //s.arc(300,300,40,40,s.radians(45),s.radians(90))
-            s.line(xPointCurve(300, 20, 45), yPointCurve(300,20,45),350,350)
         }
     };
 

@@ -5,6 +5,7 @@ import UserController from "./UserController";
 import * as b from '../config/base';
 import {curveClockWise, curveAntiClockWise} from '../models/Curve';
 import styled from "styled-components";
+import {xPointCurve, yPointCurve} from "../config/base";
 
 
 export default class GraphicController extends Component {
@@ -41,7 +42,10 @@ export default class GraphicController extends Component {
         try {
             // 1. Initiate one railroad object to railroad map to have an fix point in the canvas
             const {railroadMap, trackObject} = this.state;
-            this.setState({railroadMap: [...railroadMap, trackObject]});
+            this.setState((prev) => ({
+                railroadMap: [...railroadMap, trackObject]
+            }))
+            console.log("componentDidMount")
             // 2. p5 reference to create a new P5 object
             this.myP5 = new P5(this.canvas, this.myRef.current)
         } catch (e) {
@@ -69,9 +73,13 @@ export default class GraphicController extends Component {
 
                 console.log("Hallo from addStraight: " + obj.direction)
                 obj.direction = tempObj.direction;
-                this.setState({railroadMap: [...railroadMap, obj]})
+                this.setState((prev) => ({
+                    railroadMap: [...railroadMap, obj]
+                }))
             } else {
-                this.setState({railroadMap: [...railroadMap, obj]})
+                this.setState((prev) => ({
+                    railroadMap: [...railroadMap, obj]
+                }))
             }
         } catch
             (e) {
@@ -145,7 +153,9 @@ export default class GraphicController extends Component {
             obj = curveAntiClockWise(railroadMap, trackObject, obj);
         }
 
-        this.setState({railroadMap: [...railroadMap, obj]})
+        this.setState((prev) => ({
+            railroadMap: [...railroadMap, obj]
+        }))
     }
 
 
@@ -155,7 +165,9 @@ export default class GraphicController extends Component {
 
         try {
             if (railroadMap.length > 1) {
-                this.setState({railroadMap: [...railroadMap.filter((track) => track.id !== lastTrack.id)]})
+                this.setState((prev) => ({
+                    railroadMap: [...railroadMap.filter((track) => track.id !== lastTrack.id)]
+                }))
 
             } else {
                 alert("You reached the last track!")
@@ -174,12 +186,11 @@ export default class GraphicController extends Component {
                     s.line(t.x1, t.y1, t.x2, t.y2)
                     break;
                 case "curve":
-                    s.arc(t.curveX, t.curveY, b.curveWidth, b.curveHeight, s.radians(t.startAngle), (s.PI / 180) * t.endAngle);
+                    s.arc(t.curveX, t.curveY, b.curveWidth, b.curveHeight, s.radians(t.startAngle), s.radians(t.endAngle));
                     break;
             }
         })
     };
-
 
     rotateTrack = (s) => {
         const {railroadMap} = this.state;
@@ -190,7 +201,6 @@ export default class GraphicController extends Component {
                     this.rotateCurveTrack(lastTrack);
                     break;
                 case "straight":
-
                     lastTrack.grader = lastTrack.grader === 360 ? 45 : lastTrack.grader + 45;
                     this.rotateStraightTrack(lastTrack);
             }
@@ -426,14 +436,22 @@ export default class GraphicController extends Component {
                 break;
         }
 
-        this.setState({
+        this.setState((prev) => ({
             x1: track.x1 = Math.round(b.xPointCurve(centerX, radius, track.grader + 180)),
             y1: track.y1 = Math.round(b.yPointCurve(centerY, radius, track.grader + 180)),
             x2: track.x2 = Math.round(b.xPointCurve(centerX, radius, track.grader)),
             y2: track.y2 = Math.round(b.yPointCurve(centerY, radius, track.grader)),
             direction: track.direction = b.compass[rotateCount]
-        })
+        }))
     };
+
+    resetCanvas = () => {
+        const {trackObject} = this.state;
+        const resetArray = [trackObject]
+        this.setState((prev) => ({
+            railroadMap: resetArray
+        }))
+    }
 
     canvas = (s) => {
 
@@ -446,11 +464,15 @@ export default class GraphicController extends Component {
             s.smooth();
             s.background(111);
             s.strokeWeight(4);
-            s.noFill();
+            //s.noFill();
         }
         s.draw = () => {
             // 1. Draw railroad map on the canvas
             this.drawRailroadMap(s);
+            //s.arc(t.curveX, t.curveY, b.curveWidth, b.curveHeight, s.radians(t.startAngle), (s.PI / 180) * t.endAngle);
+            //s.arc(300,300,40,40,45,s.PI / 2)
+            //s.arc(300,300,40,40,s.radians(45),s.radians(90))
+            s.line(xPointCurve(300, 20, 45), yPointCurve(300,20,45),350,350)
         }
     };
 
@@ -459,8 +481,14 @@ export default class GraphicController extends Component {
         console.log(this.state.railroadMap)
         return (
             <div>
-            <CanvasGrid ref={this.myRef}/>
-                <UserController addStraight={this.addStraight} addCurve={this.addCurve} rotateTrack={this.rotateTrack} deleteLastTrack={this.deleteLastTrack}/>
+                <CanvasGrid ref={this.myRef}/>
+                <UserController
+                    addStraight={this.addStraight}
+                    addCurve={this.addCurve}
+                    rotateTrack={this.rotateTrack}
+                    deleteLastTrack={this.deleteLastTrack}
+                    resetCanvas={this.resetCanvas}
+                />
             </div>
         )
     }

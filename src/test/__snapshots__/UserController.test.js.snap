@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<GraphicController-Snapshot/> 1`] = `
+<div>
+  <div
+    class="sc-AxjAm ensnQq"
+  >
+    <button
+      class="btn"
+      data-testid="add-straight"
+    >
+      ADD TRACK
+    </button>
+    <button
+      class="btn"
+      data-testid="add-curve"
+    >
+      ADD CURVE
+    </button>
+    <button
+      class="btn"
+      data-testid="rotate-track"
+    >
+      ROTATE
+    </button>
+    <button
+      class="btn"
+      data-testid="delete-track"
+    >
+      DELETE
+    </button>
+    <button
+      class="btn"
+      data-testid="reset-canvas"
+    >
+      RESET
+    </button>
+  </div>
+</div>
+`;

@@ -6,7 +6,8 @@ import UserController from "./UserController";
 import * as b from '../config/base';
 import {curveClockWise, curveAntiClockWise} from '../models/Curve';
 import styled from "styled-components";
-import {xPointCurve} from "../config/base";
+import RotateStraight from "./RotateStraight";
+import SetStraightTrackDirection from "./SetStraightTrackDirection";
 
 
 export default class GraphicController extends Component {
@@ -55,7 +56,7 @@ export default class GraphicController extends Component {
         const {railroadMap, trackObject} = this.state;
         const lastTrack = railroadMap[b.lengthOfRailMap(railroadMap)];
         let obj = Object.create(trackObject);
-        let tempObj = this.straightTrackDirection(obj, lastTrack);
+        let tempObj = SetStraightTrackDirection(obj, lastTrack);
         try {
             if (railroadMap.length > 0) {
                 obj.id = lastTrack.id + 1;
@@ -81,116 +82,6 @@ export default class GraphicController extends Component {
         }
     }
 
-    straightTrackDirection = (obj, lastTrack) => {
-        const railLength = 20;
-        const radius = 20;
-        if(lastTrack.clockwise === true){
-            obj.x1 = lastTrack.x2;
-            obj.y1 = lastTrack.y2;
-            obj.x2 = lastTrack.x2;
-            obj.y2 = lastTrack.y2;
-
-        }else if (lastTrack.clockwise === false){
-            obj.x1 = xPointCurve(lastTrack.curveX, 20, lastTrack.startAngle);
-            obj.y1 = xPointCurve(lastTrack.curveY, 20, lastTrack.startAngle);
-
-        }
-
-        let centerX = obj.x1;
-        let centerY = obj.y1;
-        if(lastTrack.clockwise === true){
-            switch (lastTrack.grader) {
-                case 0:
-                    obj.x2 = lastTrack.x2 + railLength;
-                    obj.direction = "east";
-                    break;
-                case 45:
-                    obj.x2 = Math.round(b.xPointCurve(centerX, radius, 45));
-                    obj.y2 = Math.round(b.yPointCurve(centerY, radius, 45));
-                    obj.direction = "south-east";
-                    break;
-                case 90:
-                    obj.y2 = lastTrack.y2 + railLength;
-                    obj.direction = "south";
-                    break;
-                case 135:
-                    obj.x2 = Math.round(b.xPointCurve(centerX, radius, 135));
-                    obj.y2 = Math.round(b.yPointCurve(centerY, radius, 135));
-                    obj.direction = "south-west";
-                    break;
-                case 180:
-                    obj.x2 = lastTrack.x2 - railLength;
-                    obj.direction = "west";
-                    break;
-                case 225:
-                    obj.x2 = Math.round(b.xPointCurve(centerX, radius, 225));
-                    obj.y2 = Math.round(b.yPointCurve(centerY, radius, 225));
-                    obj.direction = "north-west";
-                    break;
-                case 270:
-                    obj.y2 = lastTrack.y2 - railLength;
-                    obj.direction = "north";
-                    break;
-                case 315:
-                    obj.x2 = Math.round(b.xPointCurve(centerX, radius, 315));
-                    obj.y2 = Math.round(b.yPointCurve(centerY, radius, 315));
-                    obj.direction = "north-east";
-                    break;
-                case 360:
-                    obj.x2 = lastTrack.x2 + railLength;
-                    obj.direction = "east";
-                    break;
-            }
-        }else if(lastTrack.clockwise === false) {
-
-            switch (lastTrack.grader) {
-                case 0:
-                    obj.x2 = lastTrack.x2 + railLength;
-                    obj.direction = "east";
-                    break;
-                case 45:
-                    obj.x2 = Math.round(b.xPointCurve(centerX, radius, 45));
-                    obj.y2 = Math.round(b.yPointCurve(centerY, radius, 45));
-                    obj.direction = "south-east";
-                    break;
-                case 90:
-                    obj.y2 = lastTrack.y2 + railLength;
-                    obj.direction = "south";
-                    break;
-                case 135:
-                    obj.x2 = Math.round(b.xPointCurve(centerX, radius, 135));
-                    obj.y2 = Math.round(b.yPointCurve(centerY, radius, 135));
-                    obj.direction = "south-west";
-                    break;
-                case 180:
-                    obj.x2 = lastTrack.x2 - railLength;
-                    obj.direction = "west";
-                    break;
-                case 225:
-                    obj.x2 = Math.round(b.xPointCurve(centerX, radius, 225));
-                    obj.y2 = Math.round(b.yPointCurve(centerY, radius, 225));
-                    obj.direction = "north-west";
-                    break;
-                case 270:
-                    obj.y2 = lastTrack.y1 - railLength;
-                    obj.x2 = obj.x1;
-                    obj.direction = "north";
-                    break;
-                case 315:
-                    obj.x2 = Math.round(b.xPointCurve(centerX, radius, 315));
-                    obj.y2 = Math.round(b.yPointCurve(centerY, radius, 315));
-                    obj.direction = "north-east";
-                    break;
-                case 360:
-                    obj.x2 = lastTrack.x2 + railLength;
-                    obj.direction = "east";
-                    break;
-            }
-        }
-
-
-        return obj;
-    }
 
     addCurve = () => {
         const {railroadMap, trackObject} = this.state;
@@ -248,7 +139,7 @@ export default class GraphicController extends Component {
                     break;
                 case "straight":
                     lastTrack.grader = lastTrack.grader === 360 ? 45 : lastTrack.grader + 45;
-                    this.rotateStraightTrack(lastTrack);
+                    RotateStraight(lastTrack);
             }
         } catch (e) {
             alert(e);
@@ -257,50 +148,6 @@ export default class GraphicController extends Component {
 
 
 
-    rotateStraightTrack = (track) => {
-        const centerX = (track.x2 - track.x1) / 2 + track.x1;
-        const centerY = (track.y2 - track.y1) / 2 + track.y1;
-        const radius = 10;
-
-        let rotateCount = 0;
-        switch (track.grader) {
-            case 0:
-                rotateCount = 0;
-                break;
-            case 45:
-                rotateCount = 1;
-                break;
-            case 90:
-                rotateCount = 2;
-                break;
-            case 135:
-                rotateCount = 3;
-                break;
-            case 180:
-                rotateCount = 4;
-                break;
-            case 225:
-                rotateCount = 5;
-                break;
-            case 270:
-                rotateCount = 6;
-                break;
-            case 315:
-                rotateCount = 7;
-                break;
-            case 360:
-                rotateCount = 0;
-                break;
-        }
-
-        this.setState({
-            x1: track.x1 = Math.round(b.xPointCurve(centerX, radius, track.grader + 180)),
-            y1: track.y1 = Math.round(b.yPointCurve(centerY, radius, track.grader + 180)),
-            x2: track.x2 = Math.round(b.xPointCurve(centerX, radius, track.grader)),
-            y2: track.y2 = Math.round(b.yPointCurve(centerY, radius, track.grader)),
-            direction: track.direction = b.compass[rotateCount]
-        })
-    };
 
     canvas = (s) => {
 

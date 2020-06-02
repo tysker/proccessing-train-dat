@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import Drawing from "./controller/Drawing";
+import GraphicController from "./controller/GraphicController";
 import './style/App.css'
 
 
@@ -8,9 +8,7 @@ class App extends Component {
     render() {
         return (
             <div>
-                <Drawing add={this.state}/>
-                <Drawing/>
-
+                <GraphicController/>
             </div>
         );
     }

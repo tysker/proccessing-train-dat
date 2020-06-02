@@ -1,233 +1,94 @@
-import {lengthOfRailMap, xPointCurve, yPointCurve} from "./Setup";
+import {lengthOfRailMap, xPointCurve, yPointCurve} from "../config/base";
 
-export const curveClockWise = (railroadMap, trackObject, obj) => {
-    const lastTrack = railroadMap[lengthOfRailMap(railroadMap)];
+let curve = (obj, lastTrack, startAngle, endAngle, angle, direction, grader, clockwise) => {
     obj.id = lastTrack.id + 1;
     obj.trackType = "curve";
-    obj.direction = "";
+    obj.clockwise = clockwise;
+    obj.startAngle = startAngle;
+    obj.endAngle = endAngle;
+    obj.direction = direction;
+    obj.grader = grader;
+    obj.curveX = obj.clockwise ? xPointCurve(lastTrack.x2, 20, angle) : lastTrack.curveX;
+    obj.curveY = obj.clockwise ? yPointCurve(lastTrack.y2, 20, angle) : lastTrack.curveY;
+    obj.x2 = xPointCurve(obj.curveX, 20, obj.endAngle);
+    obj.y2 = yPointCurve(obj.curveY, 20, obj.endAngle);
+    //
+    obj.originalDirection = lastTrack.direction;
+    obj.OCX = obj.curveX;
+    obj.OCY = obj.curveY;
+    obj.OX2 = obj.x2;
+    obj.OY2 = obj.y2;
+    console.log(obj.direction);
+    return obj;
+}
+export const curveClockWise = (railroadMap, trackObject, obj) => {
+    const lastTrack = railroadMap[lengthOfRailMap(railroadMap)];
 
     try {
         if (railroadMap.length > 0) {
             switch (lastTrack.direction) {
                 case "east":
-                    obj.startAngle = 270;
-                    obj.endAngle = 315;
-                    obj.curveX = xPointCurve(lastTrack.x2, 20, 90);
-                    obj.curveY = yPointCurve(lastTrack.y2, 20, 90);
-                    obj.direction = "south-east";
-                    obj.originalDirection = lastTrack.direction;
-                    obj.OCX = obj.curveX;
-                    obj.OCY = obj.curveY;
-                    obj.grader = 45;
-                    obj.x2 = xPointCurve(obj.curveX, 20, obj.endAngle)
-                    obj.y2 = yPointCurve(obj.curveY, 20, obj.endAngle)
-                    obj.OX2 = obj.x2;
-                    obj.OY2 = obj.y2;
-                    console.log(obj.direction)
-                    return obj;
+
+                    return curve(obj, lastTrack, 270, 315, 90, "south-east", 45, true);
+
                 case "south-east":
-                    obj.startAngle = 315;
-                    obj.endAngle = 0;
-                    obj.curveX = xPointCurve(lastTrack.x2, 20, 135);
-                    obj.curveY = yPointCurve(lastTrack.y2, 20, 135);
-                    obj.direction = "south";
-                    obj.originalDirection = lastTrack.direction;
-                    obj.OCX = obj.curveX;
-                    obj.OCY = obj.curveY;
-                    obj.grader = 90;
-                    obj.x2 = xPointCurve(obj.curveX, 20, obj.endAngle)
-                    obj.y2 = yPointCurve(obj.curveY, 20, obj.endAngle)
-                    console.log(obj.direction)
-                    return obj;
+                    return curve(obj, lastTrack, 315, 0, 135, "south", 90, true);
+
                 case "south":
-                    obj.startAngle = 0;
-                    obj.endAngle = 45;
-                    obj.curveX = xPointCurve(lastTrack.x2, 20, 180);
-                    obj.curveY = yPointCurve(lastTrack.y2, 20, 180);
-                    obj.direction = "south-west";
-                    obj.originalDirection = lastTrack.direction;
-                    obj.OCX = obj.curveX;
-                    obj.OCY = obj.curveY;
-                    obj.grader = 135;
-                    obj.x2 = xPointCurve(obj.curveX, 20, obj.endAngle)
-                    obj.y2 = yPointCurve(obj.curveY, 20, obj.endAngle)
-                    console.log(obj.direction)
-                    return obj;
+                    return curve(obj, lastTrack, 0, 45, 180, "south-west", 135, true);
+
                 case "south-west":
-                    obj.startAngle = 45;
-                    obj.endAngle = 90;
-                    obj.curveX = xPointCurve(lastTrack.x2, 20, 225);
-                    obj.curveY = yPointCurve(lastTrack.y2, 20, 225);
-                    obj.direction = "west";
-                    obj.originalDirection = lastTrack.direction;
-                    obj.OCX = obj.curveX;
-                    obj.OCY = obj.curveY;
-                    obj.grader = 180;
-                    obj.x2 = xPointCurve(obj.curveX, 20, obj.endAngle)
-                    obj.y2 = yPointCurve(obj.curveY, 20, obj.endAngle)
-                    console.log(obj.direction)
-                    return obj;
+                    return curve(obj, lastTrack, 45, 90, 225, "west", 180, true);
+
                 case "west":
-                    obj.startAngle = 90;
-                    obj.endAngle = 135;
-                    obj.curveX = xPointCurve(lastTrack.x2, 20, 270);
-                    obj.curveY = yPointCurve(lastTrack.y2, 20, 270);
-                    obj.direction = "north-west";
-                    obj.originalDirection = lastTrack.direction;
-                    obj.OCX = obj.curveX;
-                    obj.OCY = obj.curveY;
-                    obj.grader = 225;
-                    obj.x2 = xPointCurve(obj.curveX, 20, obj.endAngle)
-                    obj.y2 = yPointCurve(obj.curveY, 20, obj.endAngle)
-                    console.log(obj.direction)
-                    return obj;
+                    return curve(obj, lastTrack, 90, 135, 270, "north-west", 225, true);
+
                 case "north-west":
-                    obj.startAngle = 135;
-                    obj.endAngle = 180;
-                    obj.curveX = xPointCurve(lastTrack.x2, 20, 315);
-                    obj.curveY = yPointCurve(lastTrack.y2, 20, 315);
-                    obj.direction = "north";
-                    obj.originalDirection = lastTrack.direction;
-                    obj.OCX = obj.curveX;
-                    obj.OCY = obj.curveY;
-                    obj.grader = 270;
-                    obj.x2 = xPointCurve(obj.curveX, 20, obj.endAngle)
-                    obj.y2 = yPointCurve(obj.curveY, 20, obj.endAngle)
-                    console.log(obj.direction)
-                    return obj;
+                    return curve(obj, lastTrack, 135, 180, 315, "north", 270, true);
+
                 case "north":
-                    obj.startAngle = 180;
-                    obj.endAngle = 225;
-                    obj.curveX = xPointCurve(lastTrack.x2, 20, 360);
-                    obj.curveY = yPointCurve(lastTrack.y2, 20, 360);
-                    obj.direction = "north-east";
-                    obj.originalDirection = lastTrack.direction;
-                    obj.OCX = obj.curveX;
-                    obj.OCY = obj.curveY;
-                    obj.grader = 315;
-                    obj.x2 = xPointCurve(obj.curveX, 20, obj.endAngle)
-                    obj.y2 = yPointCurve(obj.curveY, 20, obj.endAngle)
-                    console.log(obj.direction)
-                    return obj;
+                    return curve(obj, lastTrack, 180, 225, 360, "north-east", 315, true);
+
                 case "north-east":
-                    obj.startAngle = 225;
-                    obj.endAngle = 270;
-                    obj.curveX = xPointCurve(lastTrack.x2, 20, 45);
-                    obj.curveY = yPointCurve(lastTrack.y2, 20, 45);
-                    obj.direction = "east";
-                    obj.originalDirection = lastTrack.direction;
-                    obj.OCX = obj.curveX;
-                    obj.OCY = obj.curveY;
-                    obj.grader = 360;
-                    obj.x2 = xPointCurve(obj.curveX, 20, obj.endAngle)
-                    obj.y2 = yPointCurve(obj.curveY, 20, obj.endAngle)
-                    console.log(obj.direction)
-                    return obj;
+                    return curve(obj, lastTrack, 225, 270, 45, "east", 360, true);
+
             }
         }
     } catch (e) {
         alert(e)
     }
-
 }
 
 export const curveAntiClockWise = (railroadMap, trackObject, obj) => {
     const lastTrack = railroadMap[lengthOfRailMap(railroadMap)];
-    obj.id = lastTrack.id + 1;
-    obj.trackType = "curve";
-    obj.direction = "";
 
     try {
         if (railroadMap.length > 0) {
             switch (lastTrack.direction) {
                 case "east":
-                    obj.startAngle = 270;
-                    obj.endAngle = 315;
-                    obj.curveX = xPointCurve(lastTrack.x2, 20, 90);
-                    obj.curveY = yPointCurve(lastTrack.y2, 20, 90);
-                    obj.direction = "south-east";
-                    obj.grader = 45;
-                    obj.x2 = xPointCurve(obj.curveX, 20, obj.endAngle)
-                    obj.y2 = yPointCurve(obj.curveY, 20, obj.endAngle)
-                    console.log(obj.direction)
-                    return obj;
+                    return curve(obj, lastTrack, 45, 90, 0, "north-east", 315, false);
+
                 case "south-east":
-                    obj.startAngle = 315;
-                    obj.endAngle = 0;
-                    obj.curveX = xPointCurve(lastTrack.x2, 20, 135);
-                    obj.curveY = yPointCurve(lastTrack.y2, 20, 135);
-                    obj.direction = "south";
-                    obj.grader = 90;
-                    obj.x2 = xPointCurve(obj.curveX, 20, obj.endAngle)
-                    obj.y2 = yPointCurve(obj.curveY, 20, obj.endAngle)
-                    console.log(obj.direction)
-                    return obj;
-                case "south":
-                    obj.startAngle = 0;
-                    obj.endAngle = 45;
-                    obj.curveX = xPointCurve(lastTrack.x2, 20, 180);
-                    obj.curveY = yPointCurve(lastTrack.y2, 20, 180);
-                    obj.direction = "south-west";
-                    obj.grader = 135;
-                    obj.x2 = xPointCurve(obj.curveX, 20, obj.endAngle)
-                    obj.y2 = yPointCurve(obj.curveY, 20, obj.endAngle)
-                    console.log(obj.direction)
-                    return obj;
-                case "south-west":
-                    obj.startAngle = 45;
-                    obj.endAngle = 90;
-                    obj.curveX = xPointCurve(lastTrack.x2, 20, 225);
-                    obj.curveY = yPointCurve(lastTrack.y2, 20, 225);
-                    obj.direction = "west";
-                    obj.grader = 180;
-                    obj.x2 = xPointCurve(obj.curveX, 20, obj.endAngle)
-                    obj.y2 = yPointCurve(obj.curveY, 20, obj.endAngle)
-                    console.log(obj.direction)
-                    return obj;
-                case "west":
-                    obj.startAngle = 90;
-                    obj.endAngle = 135;
-                    obj.curveX = xPointCurve(lastTrack.x2, 20, 270);
-                    obj.curveY = yPointCurve(lastTrack.y2, 20, 270);
-                    obj.direction = "north-west";
-                    obj.grader = 225;
-                    obj.x2 = xPointCurve(obj.curveX, 20, obj.endAngle)
-                    obj.y2 = yPointCurve(obj.curveY, 20, obj.endAngle)
-                    console.log(obj.direction)
-                    return obj;
-                case "north-west":
-                    obj.startAngle = 135;
-                    obj.endAngle = 180;
-                    obj.curveX = xPointCurve(lastTrack.x2, 20, 315);
-                    obj.curveY = yPointCurve(lastTrack.y2, 20, 315);
-                    obj.direction = "north";
-                    obj.grader = 270;
-                    obj.x2 = xPointCurve(obj.curveX, 20, obj.endAngle)
-                    obj.y2 = yPointCurve(obj.curveY, 20, obj.endAngle)
-                    console.log(obj.direction)
-                    return obj;
-                case "north":
-                    obj.startAngle = 180;
-                    obj.endAngle = 225;
-                    obj.curveX = xPointCurve(lastTrack.x2, 20, 360);
-                    obj.curveY = yPointCurve(lastTrack.y2, 20, 360);
-                    obj.direction = "north-east";
-                    obj.grader = 315;
-                    obj.x2 = xPointCurve(obj.curveX, 20, obj.endAngle)
-                    obj.y2 = yPointCurve(obj.curveY, 20, obj.endAngle)
-                    console.log(obj.direction)
-                    return obj;
+                    return curve(obj, lastTrack, 90, 135, 0, "east", 0, false);
+
                 case "north-east":
-                    obj.startAngle = 225;
-                    obj.endAngle = 270;
-                    obj.curveX = xPointCurve(lastTrack.x2, 20, 45);
-                    obj.curveY = yPointCurve(lastTrack.y2, 20, 45);
-                    obj.direction = "east";
-                    obj.grader = 360;
-                    obj.x2 = xPointCurve(obj.curveX, 20, obj.endAngle)
-                    obj.y2 = yPointCurve(obj.curveY, 20, obj.endAngle)
-                    console.log(obj.direction)
-                    return obj;
+                    return curve(obj, lastTrack, 360, 45, 0, "north", 270, false);
+
+                case "south":
+                    return curve(obj, lastTrack, 135, 180, 0, "south-east", 45, false);
+
+                case "south-west":
+                    return curve(obj, lastTrack, 180, 225, 0, "south", 90, false);
+
+                case "north-west":
+                    return curve(obj, lastTrack, 270, 315, 0, "west", 180, false);
+
+                case "north":
+                    return curve(obj, lastTrack, 315, 360, 0, "north-west", 225, false);
+
+                case "west":
+                    return curve(obj, lastTrack, 225, 270, 0, "south-west", 135, false);
+
             }
         }
     } catch (e) {

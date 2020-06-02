@@ -104,6 +104,7 @@ import React from 'react';
                 break;
         }
     };
+
   const  rotateCurveTrackClockwiseSetFunction = (lastTrack) =>{
         lastTrack.curveX = Math.round(b.xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle));
         lastTrack.curveY = Math.round(b.yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle));

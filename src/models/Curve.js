@@ -1,6 +1,6 @@
 import {lengthOfRailMap, xPointCurve, yPointCurve} from "../config/base";
 
-let curve = (obj, lastTrack, startAngle, endAngle, angle, direction, grader, clockwise) => {
+export const curve = (obj, lastTrack, startAngle, endAngle, angle, direction, grader, clockwise) => {
     obj.id = lastTrack.id + 1;
     obj.trackType = "curve";
     obj.clockwise = clockwise;
@@ -21,7 +21,7 @@ let curve = (obj, lastTrack, startAngle, endAngle, angle, direction, grader, clo
     console.log(obj.direction);
     return obj;
 }
-export const curveClockWise = (railroadMap, trackObject, obj) => {
+export const curveClockWise = (railroadMap,obj) => {
     const lastTrack = railroadMap[lengthOfRailMap(railroadMap)];
 
     try {
@@ -59,7 +59,7 @@ export const curveClockWise = (railroadMap, trackObject, obj) => {
     }
 }
 
-export const curveAntiClockWise = (railroadMap, trackObject, obj) => {
+export const curveAntiClockWise = (railroadMap, obj) => {
     const lastTrack = railroadMap[lengthOfRailMap(railroadMap)];
 
     try {
@@ -88,7 +88,6 @@ export const curveAntiClockWise = (railroadMap, trackObject, obj) => {
 
                 case "west":
                     return curve(obj, lastTrack, 225, 270, 0, "south-west", 135, false);
-
             }
         }
     } catch (e) {

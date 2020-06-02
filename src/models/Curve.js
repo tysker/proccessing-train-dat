@@ -28,6 +28,7 @@ export const curveClockWise = (railroadMap, trackObject, obj) => {
         if (railroadMap.length > 0) {
             switch (lastTrack.direction) {
                 case "east":
+
                     return curve(obj, lastTrack, 270, 315, 90, "south-east", 45, true);
 
                 case "south-east":

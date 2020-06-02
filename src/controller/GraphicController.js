@@ -1,13 +1,14 @@
 import React, {Component} from 'react';
 import '../style/Drawing.css';
 import P5 from 'p5';
-import RotateCurve from "./RotateCurve";
-import UserController from "./UserController";
+import styled from "styled-components";
 import * as b from '../config/base';
 import {curveClockWise, curveAntiClockWise} from '../models/Curve';
-import styled from "styled-components";
-import RotateStraight from "./RotateStraight";
-import SetStraightTrackDirection from "./SetStraightTrackDirection";
+import RotateCurve from "../models/RotateCurve";
+import UserController from "./UserController";
+import RotateStraight from "../models/RotateStraight";
+import SetStraightTrackDirection from "../models/SetStraightTrackDirection";
+import {direction} from "../config/base";
 
 export default class GraphicController extends Component {
     constructor(props) {
@@ -28,8 +29,8 @@ export default class GraphicController extends Component {
                     startAngle: 0,
                     endAngle: 0,
                     trackType: "",
-                    direction: "east",
-                    originalDirection: "east",
+                    direction: b.direction.EAST,
+                    originalDirection: b.direction.EAST,
                     OCX: 0,
                     OCY: 0,
                     OX2: 0,
@@ -63,7 +64,7 @@ export default class GraphicController extends Component {
                 obj.id = lastTrack.id + 1;
                 obj.startAngle = lastTrack.startAngle;
                 obj.endAngle = lastTrack.endAngle;
-                obj.trackType = "straight";
+                obj.trackType = b.track.STRAIGHT;
                 obj.grader = lastTrack.grader;
                 obj.direction = lastTrack.direction;
                 obj.x1 = tempObj.x1;
@@ -95,12 +96,10 @@ export default class GraphicController extends Component {
         } else {
             obj = curveAntiClockWise(railroadMap, obj);
         }
-
         this.setState((prev) => ({
             railroadMap: [...railroadMap, obj]
         }))
-    }
-
+    };
 
     deleteLastTrack = () => {
         const {railroadMap} = this.state;
@@ -110,25 +109,24 @@ export default class GraphicController extends Component {
             if (railroadMap.length > 1) {
                 this.setState((prev) => ({
                     railroadMap: [...railroadMap.filter((track) => track.id !== lastTrack.id)]
-                }))
-
+                }));
             } else {
                 alert("You reached the last track!")
             }
         } catch (e) {
             alert(e);
         }
-    }
+    };
 
     rotateTrack = (s) => {
         const {railroadMap} = this.state;
         const lastTrack = railroadMap[b.lengthOfRailMap(railroadMap)];
         try {
             switch (lastTrack.trackType) {
-                case "curve":
+                case b.track.CURVE:
                     RotateCurve(lastTrack);
                     break;
-                case "straight":
+                case b.track.STRAIGHT:
                     lastTrack.grader = lastTrack.grader === 360 ? 45 : lastTrack.grader + 45;
                     RotateStraight(lastTrack);
             }
@@ -150,10 +148,10 @@ export default class GraphicController extends Component {
         s.background(111);
         railroadMap.forEach(t => {
             switch (t.trackType) {
-                case "straight":
+                case b.track.STRAIGHT:
                     s.line(t.x1, t.y1, t.x2, t.y2)
                     break;
-                case "curve":
+                case b.track.CURVE:
                     s.arc(t.curveX, t.curveY, b.curveWidth, b.curveHeight, s.radians(t.startAngle), s.radians(t.endAngle));
                     break;
             }

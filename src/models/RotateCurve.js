@@ -1,103 +1,103 @@
-import * as b from "../config/base";
+import {direction, xPointCurve, yPointCurve} from "../config/base";
 import React from 'react';
 
 
     const RotateCurve = (lastTrack) => {
 
-        console.log(lastTrack.originalDirection);
+        const {EAST,NORTH_EAST, NORTH_WEST, NORTH, WEST, SOUTH_WEST, SOUTH, SOUTH_EAST } = direction;
         switch (lastTrack.originalDirection) {
-            case "east":
+            case EAST:
                 if (lastTrack.clockwise === true) {
                     lastTrack = rotateCurveTrackClockwiseSetFunction(lastTrack);
-                    lastTrack.direction = "north-east";
+                    lastTrack.direction = NORTH_EAST;
 
                     lastTrack.grader = 315;
                 } else if (lastTrack.clockwise === false) {
                     lastTrack = rotateCurveTrackAntiClockwiseSetFunction(lastTrack);
-                    lastTrack.direction = "south-east";
+                    lastTrack.direction = SOUTH_EAST;
                     lastTrack.grader = 45;
 
                 }
                 break;
-            case "south-east":
+            case SOUTH_EAST:
                 if (lastTrack.clockwise === true) {
                     lastTrack = rotateCurveTrackClockwiseSetFunction(lastTrack);
-                    lastTrack.direction = "east";
+                    lastTrack.direction = EAST;
                     lastTrack.grader = 0;
 
                 } else if (lastTrack.clockwise === false) {
                     lastTrack = rotateCurveTrackAntiClockwiseSetFunction(lastTrack);
-                    lastTrack.direction = "south";
+                    lastTrack.direction = SOUTH;
                     lastTrack.grader = 90;
 
                 }
                 break;
-            case "south":
+            case SOUTH:
                 if (lastTrack.clockwise === true) {
                     lastTrack = rotateCurveTrackClockwiseSetFunction(lastTrack);
-                    lastTrack.direction = "south-east";
+                    lastTrack.direction = SOUTH_EAST;
                     lastTrack.grader = 45;
                 } else if (lastTrack.clockwise === false) {
                     lastTrack = rotateCurveTrackAntiClockwiseSetFunction(lastTrack);
-                    lastTrack.direction = "south-west";
+                    lastTrack.direction = SOUTH_WEST;
                     lastTrack.grader = 135;
 
                 }
                 break;
-            case "south-west":
+            case SOUTH_WEST:
                 if (lastTrack.clockwise === true) {
                     lastTrack = rotateCurveTrackClockwiseSetFunction(lastTrack);
-                    lastTrack.direction = "south";
+                    lastTrack.direction = SOUTH;
 
                     lastTrack.grader = 90;
                 } else if (lastTrack.clockwise === false) {
                     lastTrack = rotateCurveTrackAntiClockwiseSetFunction(lastTrack);
-                    lastTrack.direction = "west";
+                    lastTrack.direction = WEST;
                     lastTrack.grader = 180;
                 }
                 break;
-            case "west":
+            case WEST:
                 if (lastTrack.clockwise === true) {
                     lastTrack = rotateCurveTrackClockwiseSetFunction(lastTrack);
-                    lastTrack.direction = "south-west";
+                    lastTrack.direction = SOUTH_WEST;
                     lastTrack.grader = 135;
                 } else if (lastTrack.clockwise === false) {
                     lastTrack = rotateCurveTrackAntiClockwiseSetFunction(lastTrack);
-                    lastTrack.direction = "north-west";
+                    lastTrack.direction = NORTH_WEST;
                     lastTrack.grader = 225;
                 }
                 break;
-            case "north-west":
+            case NORTH_WEST:
                 if (lastTrack.clockwise === true) {
                     lastTrack = rotateCurveTrackClockwiseSetFunction(lastTrack);
-                    lastTrack.direction = "west";
+                    lastTrack.direction = WEST;
                     lastTrack.clockwise = false;
                     lastTrack.grader = 180;
                 } else if (lastTrack.clockwise === false) {
                     lastTrack = rotateCurveTrackAntiClockwiseSetFunction(lastTrack);
-                    lastTrack.direction = "north";
+                    lastTrack.direction = NORTH;
                     lastTrack.grader = 270;
                 }
                 break;
-            case "north":
+            case NORTH:
                 if (lastTrack.clockwise === true) {
                     lastTrack = rotateCurveTrackClockwiseSetFunction(lastTrack);
-                    lastTrack.direction = "north-west";
+                    lastTrack.direction = NORTH_WEST;
                     lastTrack.grader = 225;
                 } else if (lastTrack.clockwise === false) {
                     lastTrack = rotateCurveTrackAntiClockwiseSetFunction(lastTrack);
-                    lastTrack.direction = "north-east";
+                    lastTrack.direction = NORTH_EAST;
                     lastTrack.grader = 315;
                 }
                 break;
-            case "north-east":
+            case NORTH_EAST:
                 if (lastTrack.clockwise === true) {
                     lastTrack = rotateCurveTrackClockwiseSetFunction(lastTrack);
-                    lastTrack.direction = "north";
+                    lastTrack.direction = NORTH;
                     lastTrack.grader = 270;
                 } else if (lastTrack.clockwise === false) {
                     lastTrack = rotateCurveTrackAntiClockwiseSetFunction(lastTrack);
-                    lastTrack.direction = "east";
+                    lastTrack.direction = EAST;
                     lastTrack.grader = 360;
 
                 }
@@ -106,12 +106,12 @@ import React from 'react';
     };
 
   const  rotateCurveTrackClockwiseSetFunction = (lastTrack) =>{
-        lastTrack.curveX = Math.round(b.xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle));
-        lastTrack.curveY = Math.round(b.yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle));
-        lastTrack.startAngle -= 225;
-        lastTrack.endAngle -= 225;
-        lastTrack.x2 = Math.round(b.xPointCurve(lastTrack.curveX, 20, lastTrack.startAngle));
-        lastTrack.y2 = Math.round(b.yPointCurve(lastTrack.curveY, 20, lastTrack.startAngle));
+        lastTrack.curveX = Math.round(xPointCurve(lastTrack.curveX, 40, lastTrack.startAngle));
+        lastTrack.curveY = Math.round(yPointCurve(lastTrack.curveY, 40, lastTrack.startAngle));
+        lastTrack.startAngle -= 225; // -225
+        lastTrack.endAngle -= 225; // -225
+        lastTrack.x2 = Math.round(xPointCurve(lastTrack.curveX, 20, lastTrack.startAngle));
+        lastTrack.y2 = Math.round(yPointCurve(lastTrack.curveY, 20, lastTrack.startAngle));
         lastTrack.clockwise = false;
 
         return lastTrack;
@@ -120,8 +120,8 @@ import React from 'react';
   const  rotateCurveTrackAntiClockwiseSetFunction = (lastTrack) =>{
         lastTrack.curveX = lastTrack.OCX;
         lastTrack.curveY = lastTrack.OCY;
-        lastTrack.startAngle += 225;
-        lastTrack.endAngle += 225;
+        lastTrack.startAngle += 225; //+225
+        lastTrack.endAngle += 225; //+225
         lastTrack.clockwise = true;
         lastTrack.x2 = lastTrack.OX2;
         lastTrack.y2 = lastTrack.OY2;

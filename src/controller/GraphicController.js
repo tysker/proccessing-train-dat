@@ -6,7 +6,6 @@ import UserController from "./UserController";
 import * as b from '../config/base';
 import {curveClockWise, curveAntiClockWise} from '../models/Curve';
 import styled from "styled-components";
-import {xPointCurve, yPointCurve} from "../config/base";
 
 export default class GraphicController extends Component {
     constructor(props) {
@@ -96,8 +95,8 @@ export default class GraphicController extends Component {
             obj.y2 = lastTrack.y2;
 
         }else if (lastTrack.clockwise === false){
-            obj.x1 = xPointCurve(lastTrack.curveX, 20, lastTrack.endAngle);
-            obj.y1 = xPointCurve(lastTrack.curveY, 20, lastTrack.endAngle);
+            obj.x1 = b.xPointCurve(lastTrack.curveX, 20, lastTrack.endAngle);
+            obj.y1 = b.xPointCurve(lastTrack.curveY, 20, lastTrack.endAngle);
 
         }
 
@@ -245,8 +244,6 @@ export default class GraphicController extends Component {
             alert(e);
         }
     };
-
-
 
     rotateStraightTrack = (track) => {
         const centerX = (track.x2 - track.x1) / 2 + track.x1;

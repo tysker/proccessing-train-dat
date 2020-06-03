@@ -31,28 +31,28 @@ export const curveClockWise = (railroadMap, obj) => {
     try {
         if (railroadMap.length > 0) {
             switch (lastTrack.direction) {
-                case b.direction.EAST:
+                case EAST:
                     return curve(obj, lastTrack, 270, 315, 90, SOUTH_EAST, 45, true);
 
-                case b.direction.SOUTH_EAST:
+                case SOUTH_EAST:
                     return curve(obj, lastTrack, 315, 0, 135, SOUTH, 90, true);
 
-                case b.direction.SOUTH:
+                case SOUTH:
                     return curve(obj, lastTrack, 0, 45, 180, SOUTH_WEST, 135, true);
 
-                case b.direction.SOUTH_WEST:
+                case SOUTH_WEST:
                     return curve(obj, lastTrack, 45, 90, 225, WEST, 180, true);
 
-                case b.direction.WEST:
+                case WEST:
                     return curve(obj, lastTrack, 90, 135, 270, NORTH_WEST, 225, true);
 
-                case b.direction.NORTH_WEST:
+                case NORTH_WEST:
                     return curve(obj, lastTrack, 135, 180, 315, NORTH, 270, true);
 
-                case b.direction.NORTH:
+                case NORTH:
                     return curve(obj, lastTrack, 180, 225, 360, NORTH_EAST, 315, true);
 
-                case b.direction.NORTH_EAST:
+                case NORTH_EAST:
                     return curve(obj, lastTrack, 225, 270, 45, EAST, 360, true);
             }
         }
@@ -67,28 +67,28 @@ export const curveAntiClockWise = (railroadMap, obj) => {
     try {
         if (railroadMap.length > 0) {
             switch (lastTrack.direction) {
-                case b.direction.EAST:
+                case EAST:
                     return curve(obj, lastTrack, 45, 90, 0, NORTH_EAST, 315, false);
 
-                case b.direction.SOUTH_EAST:
+                case SOUTH_EAST:
                     return curve(obj, lastTrack, 90, 135, 0, EAST, 0, false);
 
-                case b.direction.NORTH_EAST:
+                case NORTH_EAST:
                     return curve(obj, lastTrack, 360, 45, 0, NORTH, 270, false);
 
-                case b.direction.SOUTH:
+                case SOUTH:
                     return curve(obj, lastTrack, 135, 180, 0, SOUTH_EAST, 45, false);
 
-                case b.direction.SOUTH_WEST:
+                case SOUTH_WEST:
                     return curve(obj, lastTrack, 180, 225, 0, SOUTH, 90, false);
 
-                case b.direction.NORTH_WEST:
+                case NORTH_WEST:
                     return curve(obj, lastTrack, 270, 315, 0, WEST, 180, false);
 
-                case b.direction.NORTH:
+                case NORTH:
                     return curve(obj, lastTrack, 315, 360, 0, NORTH_WEST, 225, false);
 
-                case b.direction.WEST:
+                case WEST:
                     return curve(obj, lastTrack, 225, 270, 0, SOUTH_WEST, 135, false);
             }
         }

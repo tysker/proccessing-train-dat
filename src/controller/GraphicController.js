@@ -139,7 +139,7 @@ export default class GraphicController extends Component {
         }
     };
 
-    
+
     canvas = (s) => {
         s.setup = () => {
             // 1. Create Canvas

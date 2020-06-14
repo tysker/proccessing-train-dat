@@ -1,5 +1,6 @@
 import * as b from "../config/base";
 import React from 'react';
+import RotateStraight from "./RotateStraight";
 
 
     const RotateCurve = (lastTrack) => {
@@ -128,6 +129,4 @@ import React from 'react';
 
         return lastTrack;
     };
-
 export default RotateCurve;
-

@@ -47,8 +47,13 @@ test('<GraphicController-Snapshot/>', () => {
 // Test if the button event triggers the right function
 test('<GraphicController-FireEvent/>', () => {
     const track = jest.fn();
-    const {getByText} = render(<UserController addStraight={track} addCurve={track} deleteLastTrack={track}
-                                               resetCanvas={track} rotateTrack={track}/>);
+    const {getByText} = render(<UserController
+        addStraight={track}
+        addCurve={track}
+        deleteLastTrack={track}
+        resetCanvas={track}
+        rotateTrack={track}/>);
+
     fireEvent.click(getByText('ADD TRACK'));
     fireEvent.click(getByText('ADD CURVE'));
     fireEvent.click(getByText('DELETE'));

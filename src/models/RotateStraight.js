@@ -1,9 +1,8 @@
-import React from 'react';
 import '../style/Drawing.css';
 import * as b from '../config/base';
 
 
-const RotateStraight = (track) => {
+export const rotateStraight = (track) => {
     const centerX = (track.x2 - track.x1) / 2 + track.x1;
     const centerY = (track.y2 - track.y1) / 2 + track.y1;
     const radius = 10;
@@ -37,15 +36,15 @@ const RotateStraight = (track) => {
         case 360:
             rotateCount = 0;
             break;
+        default:
+            console.log("Something went wrong in the rotateStraight function")
     }
 
-        track.x1 = Math.round(b.xPointCurve(centerX, radius, track.grader + 180));
-        track.y1 = Math.round(b.yPointCurve(centerY, radius, track.grader + 180));
-        track.x2 = Math.round(b.xPointCurve(centerX, radius, track.grader));
-        track.y2 = Math.round(b.yPointCurve(centerY, radius, track.grader));
-        track.direction = b.compass[rotateCount];
+    track.x1 = Math.round(b.xPointCurve(centerX, radius, track.grader + 180));
+    track.y1 = Math.round(b.yPointCurve(centerY, radius, track.grader + 180));
+    track.x2 = Math.round(b.xPointCurve(centerX, radius, track.grader));
+    track.y2 = Math.round(b.yPointCurve(centerY, radius, track.grader));
+    track.direction = b.compass[rotateCount];
 
 };
 
-
-export default RotateStraight;

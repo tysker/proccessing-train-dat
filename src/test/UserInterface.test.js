@@ -1,24 +1,24 @@
 import React from 'react';
 import {render, cleanup, fireEvent} from '@testing-library/react';
-import UserController from "../controller/UserController";
+import UserInterface from "../view/UserInterface";
 
 afterEach(cleanup);
 
-test('<GraphicController-Buttons/>', () => {
-    const {getByTestId, queryByTestId, getByText, debug} = render(<UserController/>);
+test('<UserInterface-Buttons/>', () => {
+    const {getByTestId, queryByTestId, getByText, debug} = render(<UserInterface/>);
 
     //debug();
     console.error = jest.fn();
 
     const trackButton = getByTestId('add-straight');
-    const curveButton = getByTestId('add-curve');
+    const curveButton = getByTestId('add-drawCurve');
     const addDeleteButton = getByTestId('delete-track');
     const rotateButton = getByTestId('rotate-track');
     const canvasButton = getByTestId('reset-canvas');
 
     // Test if Test ID's are existing
     expect(queryByTestId('add-straight')).toBeTruthy();
-    expect(queryByTestId('add-curve')).toBeTruthy();
+    expect(queryByTestId('add-drawCurve')).toBeTruthy();
     expect(queryByTestId('delete-track')).toBeTruthy();
     expect(queryByTestId('rotate-track')).toBeTruthy();
     expect(queryByTestId('reset-canvas')).toBeTruthy();
@@ -39,27 +39,30 @@ test('<GraphicController-Buttons/>', () => {
 });
 
 // Snapshot test: creates a snapshot of the DOM
-test('<GraphicController-Snapshot/>', () => {
-    const {container} = render(<UserController/>);
+test('<UserInterface-Snapshot/>', () => {
+    const {container} = render(<UserInterface/>);
     expect(container.firstChild).toMatchSnapshot();
 });
 
 // Test if the button event triggers the right function
-test('<GraphicController-FireEvent/>', () => {
+test('<UserInterface-FireEvent/>', () => {
     const track = jest.fn();
-    const {getByText} = render(<UserController
+    const leftClick = {button: 1}
+    const {getByText} = render(<UserInterface
         addStraight={track}
         addCurve={track}
         deleteLastTrack={track}
         resetCanvas={track}
         rotateTrack={track}/>);
 
+    fireEvent.click(getByText('ADD TRACK'), leftClick)
+
     fireEvent.click(getByText('ADD TRACK'));
     fireEvent.click(getByText('ADD CURVE'));
     fireEvent.click(getByText('DELETE'));
     fireEvent.click(getByText('ROTATE'));
     fireEvent.click(getByText('RESET'));
-    expect(track).toHaveBeenCalledTimes(5);
+    expect(track).toHaveBeenCalledTimes(6);
 })
 
 

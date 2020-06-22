@@ -1,7 +1,6 @@
 import React from "react";
 import {cleanup} from '@testing-library/react';
-import {curveAntiClockWise, curveClockWise} from '../models/Curve';
-import {direction} from "../config/base";
+import {curveAntiClockWise, curveClockWise} from '../models/DrawCurve';
 
 let mockObj = {}
 let railroadMap = [];
@@ -31,7 +30,7 @@ beforeEach(() => {
 afterEach(cleanup);
 
 
-test('<Curve-true-east/>', () => {
+test('<DrawCurve-true-east/>', () => {
     mockObj.direction = "east";
     mockObj.clockwise = true;
     railroadMap = [mockObj];
@@ -43,11 +42,12 @@ test('<Curve-true-east/>', () => {
     expect(curve.startAngle).toBe(270);
     expect(curve.endAngle).toBe(315);
     expect(curve.grader).toBe(45);
-    // expect(curve.curveX).toBe();
-    // expect(curve.curveY).toBe();
+    expect(curve.curveX).toBe(300);
+    expect(curve.curveY).toBe(320);
+
 });
 
-test('<Curve-false-east/>', () => {
+test('<DrawCurve-false-east/>', () => {
     mockObj.direction = "east";
     mockObj.clockwise = false;
     railroadMap = [mockObj];
@@ -59,6 +59,6 @@ test('<Curve-false-east/>', () => {
     expect(curve.startAngle).toBe(45);
     expect(curve.endAngle).toBe(90);
     expect(curve.grader).toBe(315);
-    // expect(curve.curveX).toBe();
-    // expect(curve.curveY).toBe();
+    expect(curve.curveX).toBe(300);
+    expect(curve.curveY).toBe(300);
 });

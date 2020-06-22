@@ -123,9 +123,6 @@ export default class GraphicController extends Component {
         }
     };
 
-    FinishMap = () => {
-        
-    }
 
     rotateTrack = (s) => {
         const {railroadMap} = this.state;

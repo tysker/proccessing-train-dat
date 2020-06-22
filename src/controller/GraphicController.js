@@ -118,6 +118,10 @@ export default class GraphicController extends Component {
         }
     };
 
+    FinishMap = () => {
+        
+    }
+
     rotateTrack = (s) => {
         const {railroadMap} = this.state;
         const lastTrack = railroadMap[b.lengthOfRailMap(railroadMap)];

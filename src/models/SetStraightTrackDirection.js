@@ -1,8 +1,7 @@
-import React from 'react';
 import '../style/Drawing.css';
 import * as b from '../config/base';
 
-const SetStraightTrackDirection = (obj, lastTrack) => {
+export const setStraightTrackDirection = (obj, lastTrack) => {
 
     if (lastTrack.clockwise === true) {
         obj.x1 = lastTrack.x2;
@@ -59,9 +58,9 @@ const SetStraightTrackDirection = (obj, lastTrack) => {
             obj.x2 = lastTrack.x2 + b.railLength;
             obj.direction = b.direction.EAST;
             break;
+        default:
+            console.log("Something went wrong in the setStraightTrackDirection function")
     }
 
     return obj;
 };
-
-export default SetStraightTrackDirection;

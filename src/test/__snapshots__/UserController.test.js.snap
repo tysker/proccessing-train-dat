@@ -13,7 +13,7 @@ exports[`<GraphicController-Snapshot/> 1`] = `
     </button>
     <button
       class="btn"
-      data-testid="add-curve"
+      data-testid="add-drawCurve"
     >
       ADD CURVE
     </button>
